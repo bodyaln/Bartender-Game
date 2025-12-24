@@ -1,0 +1,828 @@
+/* ===== БАЗОВІ СТИЛІ ТА ЗМІННІ ===== */
+:root {
+    /* Кольори */
+    --primary: #1a1a2e;
+    --secondary: #16213e;
+    --accent: #00adb5;
+    --accent-light: #00ff95;
+    --text: #ffffff;
+    --text-light: #aaaaaa;
+    --panel-bg: rgba(255, 255, 255, 0.08);
+    --panel-border: rgba(255, 255, 255, 0.1);
+
+    /* Статусні кольори */
+    --success: #4CAF50;
+    --warning: #FF9800;
+    --error: #F44336;
+    --info: #2196F3;
+
+    /* Тіні */
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 8px 30px rgba(0, 173, 181, 0.3);
+
+    /* Бордер-радіуси */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+
+    /* Анімації */
+    --transition: all 0.3s ease;
+}
+
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ===== ТИПОГРАФІЯ ===== */
+h1, h2, h3, h4 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.4rem; }
+
+p { margin-bottom: 1rem; }
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover { color: var(--accent-light); }
+
+/* ===== ОСНОВНА СТРУКТУРА ===== */
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+.header {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: var(--radius-lg);
+    padding: 20px 30px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 2px solid var(--accent);
+    box-shadow: var(--shadow);
+}
+
+.logo { flex: 1; }
+
+.logo h1 {
+    color: var(--accent);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-text { font-size: 2rem; }
+
+.logo-sub {
+    background: var(--accent);
+    color: var(--primary);
+    padding: 2px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 1.2rem;
+}
+
+.tagline {
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.game-info {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.info-item {
+    background: var(--panel-bg);
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--panel-border);
+    min-width: 100px;
+    text-align: center;
+}
+
+.label {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.value {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--text);
+}
+
+/* ===== MAIN LAYOUT ===== */
+.main-content {
+    display: flex;
+    flex: 1;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+/* ===== ЗАГАЛЬНІ ПАНЕЛІ ===== */
+.panel {
+    background: var(--panel-bg);
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    border: 1px solid var(--panel-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-title {
+    color: var(--accent);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(0, 173, 181, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ===== ЛІВА ПАНЕЛЬ: ІНГРЕДІЄНТИ ===== */
+.ingredients-panel {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+}
+
+.ingredients-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.ingredient {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 15px 10px;
+    text-align: center;
+    cursor: grab;
+    transition: var(--transition);
+    border: 2px dashed var(--accent);
+    user-select: none;
+    position: relative;
+}
+
+.ingredient:hover {
+    background: rgba(0, 173, 181, 0.15);
+    transform: translateY(-3px);
+    border-style: solid;
+    box-shadow: var(--shadow-hover);
+}
+
+.ingredient:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+
+.ingredient.flipped {
+    transform: rotate(180deg);
+    border-color: var(--warning);
+}
+
+.ingredient-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.ingredient-name {
+    display: block;
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 3px;
+}
+
+.ingredient-quantity {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+.panel-tip {
+    background: rgba(0, 173, 181, 0.1);
+    border-radius: var(--radius-md);
+    padding: 15px;
+    margin-top: auto;
+    border-left: 4px solid var(--accent);
+    font-size: 0.9rem;
+}
+
+.panel-tip p { margin-bottom: 5px; }
+
+/* ===== ЦЕНТРАЛЬНА ПАНЕЛЬ: ГРА ===== */
+.game-panel {
+    flex: 2;
+    min-width: 500px;
+}
+
+.difficulty {
+    background: var(--success);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: normal;
+}
+
+.task-info {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid var(--panel-border);
+}
+
+#recipe-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 15px 0;
+}
+
+.recipe-step {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    padding-left: 25px;
+}
+
+.recipe-step:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+.stir-step {
+    background: rgba(0, 173, 181, 0.1);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.time-limit {
+    color: var(--text-light);
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* ===== КЕЛИХ ===== */
+.glass-area {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.glass-container {
+    margin-bottom: 25px;
+}
+
+.glass {
+    width: 180px;
+    height: 250px;
+    border: 3px solid var(--accent);
+    border-radius: 10px 10px 50px 50px;
+    background: rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    transition: var(--transition);
+}
+
+.glass.drop-ready {
+    border-color: var(--accent-light);
+    box-shadow: 0 0 20px rgba(0, 255, 149, 0.5);
+}
+
+.glass-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 10px 10px 50px 50px;
+}
+
+.glass-label {
+    margin-top: 15px;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* ===== ІНГРЕДІЄНТИ В КЕЛИХУ ===== */
+.glass-ingredient {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 10px 6px;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-align: center;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    word-break: break-word;
+    animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.glass-ingredient.was-flipped {
+    border-color: var(--warning);
+    position: relative;
+}
+
+.flip-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background: var(--warning);
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+}
+
+/* ===== КОЛЬОРИ ІНГРЕДІЄНТІВ ===== */
+.glass-ingredient[data-type="rum"] { background: rgba(139, 69, 19, 0.8); }
+.glass-ingredient[data-type="tequila"] { background: rgba(255, 215, 0, 0.8); }
+.glass-ingredient[data-type="whiskey"] { background: rgba(160, 120, 80, 0.8); }
+.glass-ingredient[data-type="vodka"] { background: rgba(240, 240, 240, 0.8); color: #333; }
+.glass-ingredient[data-type="gin"] { background: rgba(220, 240, 255, 0.8); color: #333; }
+.glass-ingredient[data-type="mint"] { background: rgba(46, 139, 87, 0.8); }
+.glass-ingredient[data-type="lime"] { background: rgba(50, 205, 50, 0.8); }
+.glass-ingredient[data-type="soda"] { background: rgba(135, 206, 235, 0.8); }
+.glass-ingredient[data-type="sugar"] { background: rgba(255, 255, 255, 0.8); color: #333; }
+.glass-ingredient[data-type="ice"] { background: rgba(240, 248, 255, 0.8); color: #333; }
+
+/* ===== ІНДИКАТОРИ ===== */
+.indicators {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.indicator {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 25px;
+    border-radius: var(--radius-md);
+    min-width: 150px;
+    text-align: center;
+}
+
+.indicator.progress {
+    min-width: 250px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    border-radius: 5px;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+/* ===== КНОПКИ ===== */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 140px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+/* Кольори кнопок */
+.hint-btn { background: var(--warning); color: white; }
+.check-btn { background: var(--success); color: white; }
+.reset-btn { background: var(--error); color: white; }
+.solution-btn { background: #9C27B0; color: white; }
+.next-btn { background: var(--info); color: white; }
+.stir-btn { background: #9C27B0; color: white; }
+
+/* ===== ПРАВА ПАНЕЛЬ: СТАТИСТИКА ===== */
+.stats-panel {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+}
+
+.stats-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stats-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.levels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.level {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 auto;
+    transition: var(--transition);
+}
+
+.level.completed {
+    background: var(--success);
+    color: white;
+}
+
+.level.current {
+    background: var(--info);
+    color: white;
+    transform: scale(1.1);
+}
+
+.levels-text {
+    text-align: center;
+    color: var(--text-light);
+    margin-top: 10px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: 15px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.controls-guide {
+    list-style: none;
+    padding-left: 0;
+}
+
+.controls-guide li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+}
+
+.mixing-stats {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: 15px;
+}
+
+.mix-tip {
+    background: rgba(255, 152, 0, 0.1);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.pwa-status {
+    background: rgba(255, 152, 0, 0.2);
+    color: var(--warning);
+    padding: 10px 15px;
+    border-radius: var(--radius-md);
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: var(--transition);
+}
+
+.pwa-status:hover {
+    background: rgba(255, 152, 0, 0.3);
+}
+
+.pwa-info {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    border: 2px solid var(--accent);
+    margin-top: auto;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.nav-link, .nav-btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: bold;
+    transition: var(--transition);
+}
+
+.nav-link {
+    background: rgba(0, 173, 181, 0.2);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+
+.nav-link:hover {
+    background: rgba(0, 173, 181, 0.4);
+}
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.footer-info {
+    text-align: center;
+    color: var(--text-light);
+}
+
+.course-info {
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 5px;
+}
+
+.team-info {
+    margin-bottom: 5px;
+}
+
+.validation {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* ===== АНІМАЦІЇ ===== */
+@keyframes stirGlass {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-15deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.glass.stirring {
+    animation: stirGlass 0.8s ease-in-out;
+}
+
+/* ===== АДАПТИВНІСТЬ ===== */
+@media (max-width: 1200px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .ingredients-panel,
+    .stats-panel {
+        max-width: 100%;
+    }
+
+    .game-panel {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .game-info {
+        justify-content: center;
+    }
+
+    .info-item {
+        min-width: 80px;
+        padding: 10px 15px;
+    }
+
+    .ingredients-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .glass {
+        width: 150px;
+        height: 200px;
+    }
+
+    .indicators {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .indicator {
+        min-width: 200px;
+    }
+
+    .game-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-link, .nav-btn {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    .panel {
+        padding: 20px 15px;
+    }
+
+    .ingredients-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .logo h1 {
+        font-size: 1.8rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .value {
+        font-size: 1.2rem;
+    }
+
+    .panel-title {
+        font-size: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== УТИЛІТИ ===== */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 10px; }
+.mb-1 { margin-bottom: 10px; }
+.mt-2 { margin-top: 20px; }
+.mb-2 { margin-bottom: 20px; }
+
+/* ===== OFFLINE ІНДИКАТОР ===== */
+body.offline::before {
+    content: "📴 OFFLINE MODE";
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: var(--error);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}

@@ -1,0 +1,148 @@
+{
+  "cocktails": [
+    {
+      "id": 1,
+      "name": "Mojito",
+      "emoji": "🍹",
+      "difficulty": "easy",
+      "timeLimit": 60,
+      "ingredients": [
+        { "type": "mint", "quantity": 1 },
+        { "type": "lime", "quantity": 1 },
+        { "type": "sugar", "quantity": 1 },
+        { "type": "rum", "quantity": 1 },
+        { "type": "soda", "quantity": 1 },
+        { "type": "ice", "quantity": 1 }
+      ],
+      "requiredStirs": 3,
+      "hint": "Start with fresh mint and lime",
+      "solution": "Mint → Lime → Sugar → Rum → Soda → Ice → Stir 3 times"
+    },
+    {
+      "id": 2,
+      "name": "Margarita",
+      "emoji": "🍸",
+      "difficulty": "easy",
+      "timeLimit": 50,
+      "ingredients": [
+        { "type": "tequila", "quantity": 1 },
+        { "type": "triple_sec", "quantity": 1 },
+        { "type": "lime_juice", "quantity": 1 },
+        { "type": "salt", "quantity": 1 }
+      ],
+      "requiredStirs": 2,
+      "hint": "Don't forget to salt the rim",
+      "solution": "Salt → Tequila → Triple sec → Lime juice → Stir 2 times"
+    },
+    {
+      "id": 3,
+      "name": "Old Fashioned",
+      "emoji": "🥃",
+      "difficulty": "medium",
+      "timeLimit": 45,
+      "ingredients": [
+        { "type": "whiskey", "quantity": 1 },
+        { "type": "sugar", "quantity": 1 },
+        { "type": "bitters", "quantity": 1 },
+        { "type": "orange", "quantity": 1 }
+      ],
+      "requiredStirs": 1,
+      "hint": "Stir gently just once",
+      "solution": "Sugar + Bitters → Whiskey → Orange → Stir 1 time"
+    },
+    {
+      "id": 4,
+      "name": "Cosmopolitan",
+      "emoji": "🍸",
+      "difficulty": "medium",
+      "timeLimit": 40,
+      "ingredients": [
+        { "type": "vodka", "quantity": 1 },
+        { "type": "triple_sec", "quantity": 1 },
+        { "type": "lime_juice", "quantity": 1 },
+        { "type": "cranberry", "quantity": 1 }
+      ],
+      "requiredStirs": 3,
+      "hint": "Shake well for best results",
+      "solution": "Vodka + Triple sec + Lime juice + Cranberry → Stir 3 times"
+    },
+    {
+      "id": 5,
+      "name": "Manhattan",
+      "emoji": "🍷",
+      "difficulty": "medium",
+      "timeLimit": 35,
+      "ingredients": [
+        { "type": "whiskey", "quantity": 1 },
+        { "type": "vermouth", "quantity": 1 },
+        { "type": "bitters", "quantity": 1 },
+        { "type": "cherry", "quantity": 1 }
+      ],
+      "requiredStirs": 2,
+      "hint": "Stir, don't shake",
+      "solution": "Whiskey + Vermouth + Bitters → Stir 2 times → Cherry"
+    },
+    {
+      "id": 6,
+      "name": "Martini",
+      "emoji": "🍸",
+      "difficulty": "hard",
+      "timeLimit": 30,
+      "ingredients": [
+        { "type": "gin", "quantity": 1 },
+        { "type": "vermouth", "quantity": 1 },
+        { "type": "olive", "quantity": 1 }
+      ],
+      "requiredStirs": 4,
+      "hint": "The longer you stir, the colder the drink",
+      "solution": "Gin + Vermouth → Stir 4 times → Olive"
+    },
+    {
+      "id": 7,
+      "name": "Daiquiri",
+      "emoji": "🍹",
+      "difficulty": "easy",
+      "timeLimit": 35,
+      "ingredients": [
+        { "type": "rum", "quantity": 1 },
+        { "type": "lime_juice", "quantity": 1 },
+        { "type": "sugar", "quantity": 1 }
+      ],
+      "requiredStirs": 3,
+      "hint": "Use fresh lime juice",
+      "solution": "Rum + Lime juice + Sugar → Stir 3 times"
+    },
+    {
+      "id": 8,
+      "name": "Whiskey Sour",
+      "emoji": "🥃",
+      "difficulty": "medium",
+      "timeLimit": 40,
+      "ingredients": [
+        { "type": "whiskey", "quantity": 1 },
+        { "type": "lemon_juice", "quantity": 1 },
+        { "type": "sugar", "quantity": 1 },
+        { "type": "egg_white", "quantity": 1 }
+      ],
+      "requiredStirs": 2,
+      "hint": "Dry shake first for egg white foam",
+      "solution": "Whiskey + Lemon juice + Sugar + Egg white → Stir 2 times"
+    },
+    {
+      "id": 9,
+      "name": "Negroni",
+      "emoji": "🍷",
+      "difficulty": "hard",
+      "timeLimit": 25,
+      "ingredients": [
+        { "type": "gin", "quantity": 1 },
+        { "type": "vermouth", "quantity": 1 },
+        { "type": "campari", "quantity": 1 },
+        { "type": "orange", "quantity": 1 }
+      ],
+      "requiredStirs": 1,
+      "hint": "Equal parts of all three ingredients",
+      "solution": "Gin + Vermouth + Campari → Stir 1 time → Orange"
+    }
+  ]
+}
