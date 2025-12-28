@@ -1,353 +1,326 @@
 <!DOCTYPE html>
 <html lang="sk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🍸 Bartender Game - Drag & Drop PWA</title>
+
     <!-- Styles -->
     <link rel="stylesheet" href="./style.css">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
 
     <!-- Meta tags -->
     <meta name="description" content="Drag & Drop cocktail mixing game - PWA for Web Technologies course">
     <meta name="theme-color" content="#1a1a2e">
     <meta name="mobile-web-app-capable" content="yes">
-
 </head>
+
 <body>
-<!-- Головний контейнер -->
-<div class="container">
-    <!-- ШАПКА -->
-    <header class="header">
-        <div class="logo">
-            <h1>🍸 <span class="logo-text">Bartender</span> <span class="logo-sub">Pro</span></h1>
-            <p class="tagline">Mix, pour, create!</p>
-        </div>
+    <div class="bartender">
+        <!-- Header -->
+        <header class="bartender__header">
+            <h1 class="bartender__title">🎮 <span class="bartender__logo rainbow-text">Bartender Game</span></h1>
+        </header>
 
-        <div class="game-info">
-            <div class="info-item">
-                <span class="label">Level:</span>
-                <span id="current-level" class="value">1/8</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Time:</span>
-                <span id="timer" class="value">00:00</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Best:</span>
-                <span id="best-time" class="value">--:--</span>
-            </div>
-        </div>
+        <!-- Main Content -->
+        <main class="bartender__main">
+            <!-- Game Panel -->
+            <section class="bartender__game-panel">
+                <!-- Game Header with Recipe Button -->
+                <div class="bartender__game-header">
+                    <h2 class="bartender__cocktail-title">
+                        <span id="current-cocktail">🍹 Mojito</span>
+                        <span class="bartender__difficulty" id="difficulty">Easy</span>
+                    </h2>
 
-    </header>
-
-    <!-- ОСНОВНИЙ КОНТЕНТ -->
-    <main class="main-content">
-
-        <!-- ЛІВА КОЛОНКА: Інгредієнти -->
-        <section class="panel ingredients-panel">
-            <h2 class="panel-title">📦 Ingredients</h2>
-            <!-- ingredients-list в index.html -->
-            <div class="ingredients-list" id="ingredients-container">
-                <!-- База -->
-                <div class="ingredient" draggable="true" data-type="rum">
-                    <div class="ingredient-icon">🥃</div>
-                    <span class="ingredient-name">Rum</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="tequila">
-                    <div class="ingredient-icon">🍶</div>
-                    <span class="ingredient-name">Tequila</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="whiskey">
-                    <div class="ingredient-icon">🥃</div>
-                    <span class="ingredient-name">Whiskey</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="vodka">
-                    <div class="ingredient-icon">🍶</div>
-                    <span class="ingredient-name">Vodka</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="gin">
-                    <div class="ingredient-icon">🍶</div>
-                    <span class="ingredient-name">Gin</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <!-- Лікери -->
-                <div class="ingredient" draggable="true" data-type="triple_sec">
-                    <div class="ingredient-icon">🍊</div>
-                    <span class="ingredient-name">Triple Sec</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="vermouth">
-                    <div class="ingredient-icon">🍷</div>
-                    <span class="ingredient-name">Vermouth</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="campari">
-                    <div class="ingredient-icon">🍒</div>
-                    <span class="ingredient-name">Campari</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <!-- Соки та напої -->
-                <div class="ingredient" draggable="true" data-type="lime_juice">
-                    <div class="ingredient-icon">🍋</div>
-                    <span class="ingredient-name">Lime Juice</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="lemon_juice">
-                    <div class="ingredient-icon">🍋</div>
-                    <span class="ingredient-name">Lemon Juice</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="cranberry">
-                    <div class="ingredient-icon">🍒</div>
-                    <span class="ingredient-name">Cranberry</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="soda">
-                    <div class="ingredient-icon">🍼</div>
-                    <span class="ingredient-name">Soda</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <!-- Інгредієнти -->
-                <div class="ingredient" draggable="true" data-type="mint">
-                    <div class="ingredient-icon">🌿</div>
-                    <span class="ingredient-name">Mint</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="lime">
-                    <div class="ingredient-icon">🍈</div>
-                    <span class="ingredient-name">Lime</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="orange">
-                    <div class="ingredient-icon">🍊</div>
-                    <span class="ingredient-name">Orange</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="cherry">
-                    <div class="ingredient-icon">🍒</div>
-                    <span class="ingredient-name">Cherry</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="olive">
-                    <div class="ingredient-icon">🫒</div>
-                    <span class="ingredient-name">Olive</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <!-- Інше -->
-                <div class="ingredient" draggable="true" data-type="sugar">
-                    <div class="ingredient-icon">🧂</div>
-                    <span class="ingredient-name">Sugar</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="salt">
-                    <div class="ingredient-icon">🧂</div>
-                    <span class="ingredient-name">Salt</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="bitters">
-                    <div class="ingredient-icon">🍼</div>
-                    <span class="ingredient-name">Bitters</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="egg_white">
-                    <div class="ingredient-icon">🥚</div>
-                    <span class="ingredient-name">Egg White</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-
-                <div class="ingredient" draggable="true" data-type="ice">
-                    <div class="ingredient-icon">🧊</div>
-                    <span class="ingredient-name">Ice</span>
-                    <span class="ingredient-quantity">x1</span>
-                </div>
-            </div>
-
-
-        </section>
-
-        <!-- ЦЕНТРАЛЬНА ЧАСТИНА: Ігрова зона -->
-        <section class="panel game-panel">
-            <h2 class="panel-title">
-                <span id="current-cocktail">🍹 Mojito</span>
-                <span class="difficulty" id="difficulty">Easy</span>
-            </h2>
-
-            <!-- Завдання -->
-            <div class="task-info">
-                <h3>📋 Recipe to prepare:</h3>
-                <ul id="recipe-list">
-                    <li class="recipe-step">Add mint leaves</li>
-                    <li class="recipe-step">Add lime wedges</li>
-                    <li class="recipe-step">Pour 50ml rum</li>
-                    <li class="recipe-step">Add sugar</li>
-                    <li class="recipe-step">Top with soda water</li>
-                    <li class="recipe-step">Add ice & stir</li>
-                </ul>
-                <div class="time-limit">
-                    ⏱️ Time limit: <span id="time-limit">60</span> seconds
-                </div>
-            </div>
-
-            <!-- Келих -->
-            <div class="glass-area">
-                <div class="glass-container">
-                    <div class="glass" id="target-glass">
-                        <div class="glass-content" id="glass-content">
-                            <!-- Тут з'являться інгредієнти -->
+                    <div class="bartender__game-info">
+                        <button id="btn-recipe" class="bartender__btn bartender__btn--recipe">
+                            📝 Recipe
+                        </button>
+                        <div class="bartender__timer-info">
+                            <span class="bartender__timer-label">⏱️ Time:</span>
+                            <span id="timer" class="bartender__timer-value">0:00</span>
                         </div>
-
+                        <div class="bartender__best-info">
+                            <span class="bartender__best-label">⭐️ Best:</span>
+                            <span id="best-time" class="bartender__best-value">0:00</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Індикатори -->
-                <div class="indicators">
-                    <div class="indicator">
-                        <span>Rotation:</span>
-                        <span id="rotation-indicator">0°</span>
-                    </div>
-                    <div class="indicator">
-                        <span>Speed:</span>
-                        <span id="speed-indicator">Normal</span>
-                    </div>
-                    <div class="indicator">
-                        <span>Stirs:</span>
-                        <span id="stir-count">0</span>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Кнопки управління -->
-            <div class="game-controls">
-                <button id="btn-start" class="btn hint-btn">🎮 Start Level</button>
-                <button id="btn-check" class="btn check-btn">✅ Check</button>
-                <button id="btn-reset" class="btn reset-btn">🗑️ Reset</button>
-                <button id="btn-stir" class="btn stir-btn">🔄 Stir</button>
-                <button id="btn-solution" class="btn solution-btn">📖 Solution</button>
-                <button id="btn-next" class="btn next-btn" disabled>Next →</button>
-                <!-- В footer-nav або game-controls додай ці кнопки: -->
-                <button id="btn-pause" class="nav-btn">⏸ Pause</button>
-                <button id="btn-resume" class="nav-btn" style="display:none;">▶ Resume</button>
-
-
-            </div>
-        </section>
-
-        <!-- ПРАВА КОЛОНКА: Статистика та інфо -->
-        <section class="panel stats-panel">
-            <h2 class="panel-title">📊 Game Stats</h2>
-
-            <div class="stats-section">
-                <h3>Level Progress</h3>
-                <div class="levels">
-                    <div class="level completed">1</div>
-                    <div class="level current">2</div>
-                    <div class="level">3</div>
-                    <div class="level">4</div>
-                    <div class="level">5</div>
-                    <div class="level">6</div>
-                    <div class="level">7</div>
-                    <div class="level">8</div>
-                </div>
-                <p class="levels-text">Completed: <span id="completed-levels">1</span>/8</p>
-            </div>
-
-            <div class="stats-section">
-                <h3>Session Stats</h3>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-number" id="games-played">0</div>
-                        <div class="stat-label">Games</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="success-rate">0%</div>
-                        <div class="stat-label">Success</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="avg-time">--:--</div>
-                        <div class="stat-label">Avg. Time</div>
+                <!-- Recipe Modal -->
+                <div id="recipe-modal" class="bartender__modal">
+                    <div class="bartender__modal-content">
+                        <div class="bartender__modal-header">
+                            <h3>📋 Recipe to prepare:</h3>
+                            <button id="btn-close-modal" class="bartender__modal-close">&times;</button>
+                        </div>
+                        <div class="bartender__modal-body">
+                            <ul id="recipe-list" class="bartender__recipe-list">
+                                <li class="bartender__recipe-step">Add mint leaves</li>
+                                <li class="bartender__recipe-step">Add lime wedges</li>
+                                <li class="bartender__recipe-step">Pour 50ml rum</li>
+                                <li class="bartender__recipe-step">Add sugar</li>
+                                <li class="bartender__recipe-step">Top with soda water</li>
+                                <li class="bartender__recipe-step">Add ice & stir</li>
+                            </ul>
+                            <div class="bartender__time-limit">
+                                Time limit: <span id="time-limit">60</span> seconds
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="stats-section">
-                <h3>Controls Guide</h3>
-                <ul class="controls-guide">
-                    <li><strong>Desktop:</strong> Drag with mouse</li>
-                    <li><strong>Mobile:</strong> Touch & drag</li>
-                    <li><strong>Rotate:</strong> Hold SHIFT while dragging</li>
-                    <li><strong>Fast drag:</strong> Quick pour</li>
-                    <li><strong>Slow drag:</strong> Precise pour</li>
-                </ul>
-            </div>
-            <div class="stats-section">
-                <h3>Mixing Stats</h3>
-                <div class="mixing-stats">
-                    <div>Total stirs: <span id="total-stirs">0</span></div>
-                    <div>Mix quality: <span id="mix-quality">0%</span></div>
-                    <div class="mix-tip">💡 Tip: Stir 3 times for perfect mix</div>
+                <!-- Ingredients Container -->
+                <div class="bartender__ingredients-container" id="ingredients-container">
+                    <!-- Alcohol Ingredients -->
+                    <div class="bartender__ingredient" draggable="true" data-type="rum">
+                        <img src="./icons/rum.svg" alt="Rum" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Rum</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="tequila">
+                        <img src="./icons/tequila.svg" alt="Tequila" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Tequila</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="whiskey">
+                        <img src="./icons/whiskey.svg" alt="Whiskey" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Whiskey</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="vodka">
+                        <img src="./icons/vodka.svg" alt="Vodka" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Vodka</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="gin">
+                        <img src="./icons/gin.svg" alt="Gin" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Gin</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <!-- Liqueurs -->
+                    <div class="bartender__ingredient" draggable="true" data-type="triple_sec">
+                        <img src="./icons/triple-sec.svg" alt="Triple Sec" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Triple Sec</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="vermouth">
+                        <img src="./icons/vermouth.svg" alt="Vermouth" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Vermouth</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="campari">
+                        <img src="./icons/campari.svg" alt="Campari" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Campari</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <!-- Juices -->
+                    <div class="bartender__ingredient" draggable="true" data-type="lime_juice">
+                        <img src="./icons/lime-juice.svg" alt="Lime Juice" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Lime Juice</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="lemon_juice">
+                        <img src="./icons/lemon-juice.svg" alt="Lemon Juice" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Lemon Juice</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="cranberry">
+                        <img src="./icons/cranberry.svg" alt="Cranberry" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Cranberry</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="soda">
+                        <img src="./icons/soda.svg" alt="Soda" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Soda</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <!-- Garnishes -->
+                    <div class="bartender__ingredient" draggable="true" data-type="mint">
+                        <img src="./icons/mint.svg" alt="Mint" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Mint</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="lime">
+                        <img src="./icons/lime.svg" alt="Lime" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Lime</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="orange">
+                        <img src="./icons/orange.svg" alt="Orange" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Orange</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="cherry">
+                        <img src="./icons/cherry.svg" alt="Cherry" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Cherry</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="olive">
+                        <img src="./icons/olive.svg" alt="Olive" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Olive</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <!-- Other -->
+                    <div class="bartender__ingredient" draggable="true" data-type="sugar">
+                        <img src="./icons/sugar.svg" alt="Sugar" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Sugar</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="salt">
+                        <img src="./icons/salt.svg" alt="Salt" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Salt</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="bitters">
+                        <img src="./icons/bitters.svg" alt="Bitters" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Bitters</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="egg_white">
+                        <img src="./icons/egg-white.svg" alt="Egg White" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Egg White</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="ice">
+                        <img src="./icons/ice.svg" alt="Ice" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Ice</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="stats-section">
-                <h3>PWA Status</h3>
-                <div class="pwa-status" id="pwa-status">
-                    📱 Install as App
+                <!-- Glass Area -->
+                <div class="bartender__glass-area">
+                    <div class="bartender__glass-container">
+                        <div class="bartender__glass" id="target-glass">
+                            <div class="bartender__glass-content" id="glass-content"></div>
+                        </div>
+                    </div>
                 </div>
-                <button id="pwa-install-button" style="display: none;">
-                    ⬇️ Install Game
-                </button>
-                <p class="pwa-info">Works offline after installation</p>
+
+
+                <!-- Game Controls -->
+                <div class="bartender__game-controls">
+                    <button id="btn-start" class="bartender__btn bartender__btn--start">🎮 Start Level</button>
+                    <button id="btn-check" class="bartender__btn bartender__btn--check">✅ Check</button>
+                    <button id="btn-reset" class="bartender__btn bartender__btn--reset">🗑️ Reset</button>
+                    <button id="btn-stir" class="bartender__btn bartender__btn--stir">🔄 Stir: <span
+                            id="stir-count">0</span></button>
+                    <button id="btn-solution" class="bartender__btn bartender__btn--solution">📖 Solution</button>
+                    <button id="btn-next" class="bartender__btn bartender__btn--next" disabled>Next →</button>
+                </div>
+            </section>
+
+            <!-- Stats Panel -->
+            <section class="bartender__stats-panel">
+                <h2 class="bartender__stats-title">📊 Game Stats</h2>
+
+                <div class="bartender__stats-section">
+                    <h3>Level Progress</h3>
+                    <div class="bartender__levels">
+                        <div class="bartender__level bartender__level--completed">1</div>
+                        <div class="bartender__level bartender__level--current">2</div>
+                        <div class="bartender__level">3</div>
+                        <div class="bartender__level">4</div>
+                        <div class="bartender__level">5</div>
+                        <div class="bartender__level">6</div>
+                        <div class="bartender__level">7</div>
+                        <div class="bartender__level">8</div>
+                    </div>
+                    <p class="bartender__levels-text">Completed: <span id="completed-levels">1</span>/8</p>
+                </div>
+
+                <div class="bartender__stats-section">
+                    <h3>Session Stats</h3>
+                    <div class="bartender__stats-grid">
+                        <div class="bartender__stat-box">
+                            <div class="bartender__stat-number" id="games-played">0</div>
+                            <div class="bartender__stat-label">Games</div>
+                        </div>
+                        <div class="bartender__stat-box">
+                            <div class="bartender__stat-number" id="success-rate">0%</div>
+                            <div class="bartender__stat-label">Success</div>
+                        </div>
+                        <div class="bartender__stat-box">
+                            <div class="bartender__stat-number" id="avg-time">--:--</div>
+                            <div class="bartender__stat-label">Avg. Time</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bartender__stats-section">
+                    <h3>Controls Guide</h3>
+                    <ul class="bartender__controls-guide">
+                        <li><strong>Desktop:</strong> Drag with mouse</li>
+                        <li><strong>Mobile:</strong> Touch & drag</li>
+                        <li><strong>Rotate:</strong> Hold SHIFT while dragging</li>
+                        <li><strong>Fast drag:</strong> Quick pour</li>
+                        <li><strong>Slow drag:</strong> Precise pour</li>
+                    </ul>
+                </div>
+
+                <div class="bartender__stats-section">
+                    <h3>Mixing Stats</h3>
+                    <div class="bartender__mixing-stats">
+                        <div>Total stirs: <span id="total-stirs">0</span></div>
+                        <div>Mix quality: <span id="mix-quality">0%</span></div>
+                        <div class="bartender__mix-tip">💡 Tip: Stir 3 times for perfect mix</div>
+                    </div>
+                </div>
+
+                <div class="bartender__stats-section">
+                    <h3>PWA Status</h3>
+                    <div class="bartender__pwa-status" id="pwa-status">📱 Install as App</div>
+                    <button id="pwa-install-button" class="bartender__btn bartender__btn--install"
+                        style="display: none;">⬇️ Install Game</button>
+                    <p class="bartender__pwa-info">Works offline after installation</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bartender__footer">
+            <nav class="bartender__footer-nav">
+                <a href="./instructions.html" class="bartender__nav-link" target="_blank">📘 Game Instructions</a>
+            </nav>
+
+            <div class="bartender__footer-info">
+                <p class="bartender__course-info">Web Technologies - Final Project 2025</p>
+                <p class="bartender__team-info">Team: Bohdan Lynnyk and Bohdan Serdiukov</p>
+                <p class="bartender__validation">✅ Valid HTML5 & CSS3 | 🎮 Drag & Drop PWA</p>
             </div>
-        </section>
-    </main>
+        </footer>
+    </div>
 
-    <!-- ПІДВАЛ -->
-    <footer class="footer">
-        <nav class="footer-nav">
-            <a href="./instructions.html" class="nav-link" target="_blank">
-                📘 Game Instructions
-            </a>
-        </nav>
-
-        <div class="footer-info">
-            <p class="course-info">Web Technologies - Final Project 2025</p>
-            <p class="team-info">Team: Bohdan Lynnyk and Bohdan Serdiukov</p>
-            <p class="validation">
-                ✅ Valid HTML5 & CSS3 | 🎮 Drag & Drop PWA
-            </p>
-        </div>
-    </footer>
-</div>
-
-<!-- JavaScript -->
-<script src="./game.js"></script>
+    <!-- JavaScript -->
+    <script src="./game.js"></script>
 </body>
+
 </html>
