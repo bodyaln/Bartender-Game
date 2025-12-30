@@ -40,7 +40,7 @@
 
                     <div class="bartender__game-info">
                         <button id="btn-recipe" class="bartender__btn bartender__btn--recipe">
-                            📝 Recipe
+                            <span>📝 Recipe</span>
                         </button>
                         <div class="bartender__timer-info">
                             <span class="bartender__timer-label">⏱️ Time:</span>
@@ -76,8 +76,8 @@
                     </div>
                 </div>
 
-                <!-- Ingredients Container -->
-                <div class="bartender__ingredients-container" id="ingredients-container">
+                <!-- First Group of Ingredients (Alcohol, Liqueurs, Juices) -->
+                <div class="bartender__ingredients-group" id="ingredients-group-1">
                     <!-- Alcohol Ingredients -->
                     <div class="bartender__ingredient" draggable="true" data-type="rum">
                         <img src="./icons/rum.svg" alt="Rum" class="bartender__ingredient-icon">
@@ -141,18 +141,24 @@
                         <span class="bartender__ingredient-quantity">x1</span>
                     </div>
 
-                    <div class="bartender__ingredient" draggable="true" data-type="cranberry">
-                        <img src="./icons/cranberry.svg" alt="Cranberry" class="bartender__ingredient-icon">
-                        <span class="bartender__ingredient-name">Cranberry</span>
-                        <span class="bartender__ingredient-quantity">x1</span>
-                    </div>
-
                     <div class="bartender__ingredient" draggable="true" data-type="soda">
                         <img src="./icons/soda.svg" alt="Soda" class="bartender__ingredient-icon">
                         <span class="bartender__ingredient-name">Soda</span>
                         <span class="bartender__ingredient-quantity">x1</span>
                     </div>
+                </div>
 
+                <!-- Glass Area -->
+                <div class="bartender__glass-area">
+                    <div class="bartender__glass-container">
+                        <div class="bartender__glass" id="target-glass">
+                            <div class="bartender__glass-content" id="glass-content"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Group of Ingredients (Garnishes, Other) -->
+                <div class="bartender__ingredients-group" id="ingredients-group-2">
                     <!-- Garnishes -->
                     <div class="bartender__ingredient" draggable="true" data-type="mint">
                         <img src="./icons/mint.svg" alt="Mint" class="bartender__ingredient-icon">
@@ -181,6 +187,12 @@
                     <div class="bartender__ingredient" draggable="true" data-type="olive">
                         <img src="./icons/olive.svg" alt="Olive" class="bartender__ingredient-icon">
                         <span class="bartender__ingredient-name">Olive</span>
+                        <span class="bartender__ingredient-quantity">x1</span>
+                    </div>
+
+                    <div class="bartender__ingredient" draggable="true" data-type="cranberry">
+                        <img src="./icons/cranberry.svg" alt="Cranberry" class="bartender__ingredient-icon">
+                        <span class="bartender__ingredient-name">Cranberry</span>
                         <span class="bartender__ingredient-quantity">x1</span>
                     </div>
 
@@ -215,16 +227,6 @@
                         <span class="bartender__ingredient-quantity">x1</span>
                     </div>
                 </div>
-
-                <!-- Glass Area -->
-                <div class="bartender__glass-area">
-                    <div class="bartender__glass-container">
-                        <div class="bartender__glass" id="target-glass">
-                            <div class="bartender__glass-content" id="glass-content"></div>
-                        </div>
-                    </div>
-                </div>
-
 
                 <!-- Game Controls -->
                 <div class="bartender__game-controls">
@@ -317,6 +319,11 @@
                 <p class="bartender__validation">✅ Valid HTML5 & CSS3 | 🎮 Drag & Drop PWA</p>
             </div>
         </footer>
+    </div>
+
+    <!-- Floating Glass (будет появляться при скролле) -->
+    <div class="bartender__floating-glass" id="floating-glass">
+        <div class="bartender__floating-glass-content" id="floating-glass-content"></div>
     </div>
 
     <!-- JavaScript -->

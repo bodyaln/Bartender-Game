@@ -5,17 +5,23 @@ class BartenderGame {
         console.log('🍸 Bartender Game - Complete with Statistics');
 
         // ===== DOM ЕЛЕМЕНТИ =====
-        this.ingredients = document.querySelectorAll('.ingredient');
+        this.ingredients = document.querySelectorAll('.bartender__ingredient');
         this.glass = document.getElementById('target-glass');
         this.glassContent = document.getElementById('glass-content');
         this.nextBtn = document.getElementById('btn-next');
         this.startBtn = document.getElementById('btn-start');
         this.timerElement = document.getElementById('timer');
+        
+        // ===== МОДАЛЬНОЕ ОКНО РЕЦЕПТА =====
+        this.recipeModal = document.getElementById('recipe-modal');
+        this.recipeBtn = document.getElementById('btn-recipe');
+        this.closeModalBtn = document.getElementById('btn-close-modal');
 
         // ===== ЕЛЕМЕНТИ СТАТИСТИКИ =====
         this.successRateElement = document.getElementById('success-rate');
         this.avgTimeElement = document.getElementById('avg-time');
         this.gamesPlayedElement = document.getElementById('games-played');
+        this.bestTimeElement = document.getElementById('best-time');
 
         // ===== СТАН ГРИ =====
         this.addedIngredients = [];
@@ -72,6 +78,9 @@ class BartenderGame {
         // Налаштовуємо керування перевертанням
         this.setupFlipControls();
 
+        // Налаштовуємо модальне окно
+        this.setupModal();
+
         // Завантажуємо поточний рівень
         this.loadLevel(this.currentLevel);
 
@@ -79,6 +88,23 @@ class BartenderGame {
         this.updateLevelStatistics();
 
         console.log(`✅ Game ready! Level: ${this.currentLevel}/${this.totalLevels}`);
+    }
+
+    // ===== НАСТРОЙКА МОДАЛЬНОГО ОКНА =====
+    setupModal() {
+        this.recipeBtn.addEventListener('click', () => {
+            this.recipeModal.style.display = 'flex';
+        });
+
+        this.closeModalBtn.addEventListener('click', () => {
+            this.recipeModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === this.recipeModal) {
+                this.recipeModal.style.display = 'none';
+            }
+        });
     }
 
     // ===== СИСТЕМА СТАТИСТИКИ =====
@@ -398,12 +424,6 @@ class BartenderGame {
             cocktailElement.innerHTML = `${this.currentCocktail.emoji} ${this.currentCocktail.name}`;
         }
 
-        // Оновлюємо номер рівня
-        const levelElement = document.getElementById('current-level');
-        if (levelElement) {
-            levelElement.textContent = `${this.currentLevel}/${this.totalLevels}`;
-        }
-
         // Оновлюємо таймер, рецепт, прогрес та статистику
         this.updateTimerDisplay();
         this.updateRecipeList();
@@ -415,12 +435,12 @@ class BartenderGame {
     }
 
     showCurrentLevelStats() {
-        const bestTimeElement = document.getElementById('best-time');
-
-        if (this.overallBestTime) {
-            bestTimeElement.textContent = this.formatTime(this.overallBestTime);
-        } else {
-            bestTimeElement.textContent = '--:--';
+        if (this.bestTimeElement) {
+            if (this.overallBestTime) {
+                this.bestTimeElement.textContent = this.formatTime(this.overallBestTime);
+            } else {
+                this.bestTimeElement.textContent = '0:00';
+            }
         }
     }
 
@@ -461,7 +481,7 @@ class BartenderGame {
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
 
-        this.timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        this.timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
 
     timeOut() {
@@ -525,10 +545,10 @@ class BartenderGame {
                 const isFlipped = this.flipStates[type] || false;
 
                 if (isFlipped) {
-                    ingredient.classList.add('flipped');
+                    ingredient.classList.add('bartender__ingredient--flipped');
                     ingredient.style.transform = 'rotate(180deg)';
                 } else {
-                    ingredient.classList.remove('flipped');
+                    ingredient.classList.remove('bartender__ingredient--flipped');
                     ingredient.style.transform = '';
                 }
             }
@@ -543,10 +563,10 @@ class BartenderGame {
                 const isFlipped = this.flipStates[type] || false;
 
                 if (isFlipped) {
-                    ingredient.classList.add('flipped');
+                    ingredient.classList.add('bartender__ingredient--flipped');
                     ingredient.style.transform = 'rotate(180deg)';
                 } else {
-                    ingredient.classList.remove('flipped');
+                    ingredient.classList.remove('bartender__ingredient--flipped');
                     ingredient.style.transform = '';
                 }
             }
@@ -584,16 +604,16 @@ class BartenderGame {
         // Обробники для келиха
         this.glass.addEventListener('dragover', (e) => {
             e.preventDefault();
-            this.glass.classList.add('drop-ready');
+            this.glass.classList.add('bartender__glass--drop-ready');
         });
 
         this.glass.addEventListener('dragleave', (e) => {
-            this.glass.classList.remove('drop-ready');
+            this.glass.classList.remove('bartender__glass--drop-ready');
         });
 
         this.glass.addEventListener('drop', (e) => {
             e.preventDefault();
-            this.glass.classList.remove('drop-ready');
+            this.glass.classList.remove('bartender__glass--drop-ready');
 
             if (!this.levelStarted || !this.isTimerRunning) return;
 
@@ -619,16 +639,16 @@ class BartenderGame {
 
         // Створюємо елемент інгредієнта в келиху
         const element = document.createElement('div');
-        element.className = 'glass-ingredient';
+        element.className = 'bartender__glass-ingredient';
         element.textContent = type.toUpperCase();
         element.dataset.type = type;
 
         // Додаємо позначку перевернутої бутилки
         if (isFlipped && this.alcoholTypes.includes(type)) {
-            element.classList.add('was-flipped');
+            element.classList.add('bartender__glass-ingredient--flipped');
 
             const flipBadge = document.createElement('span');
-            flipBadge.className = 'flip-badge';
+            flipBadge.className = 'bartender__flip-badge';
             flipBadge.title = 'This was poured from upside down bottle';
             element.appendChild(flipBadge);
         }
@@ -753,9 +773,6 @@ class BartenderGame {
 
         console.log(`Stirs: need ${required}, have ${actual}`);
 
-        // Стара версія (дозволяє ±1):
-        // const isCorrect = Math.abs(actual - required) <= 1;
-
         // Нова версія (потрібно точної відповідності):
         const isCorrect = actual === required;
 
@@ -831,11 +848,11 @@ class BartenderGame {
         this.stirCount++;
 
         // Запускаємо анімацію мішання
-        this.glass.classList.add('stirring');
+        this.glass.classList.add('bartender__glass--stirring');
         this.mixIngredients();
 
         setTimeout(() => {
-            this.glass.classList.remove('stirring');
+            this.glass.classList.remove('bartender__glass--stirring');
             this.isStirring = false;
         }, 800);
     }
@@ -890,14 +907,6 @@ class BartenderGame {
         if (checkBtn) {
             checkBtn.addEventListener('click', () => {
                 this.checkSolution();
-            });
-        }
-
-        // Кнопка Hint
-        const hintBtn = document.getElementById('btn-hint');
-        if (hintBtn) {
-            hintBtn.addEventListener('click', () => {
-                alert('💡 Add all ingredients from the recipe and stir correct number of times');
             });
         }
 
@@ -983,11 +992,7 @@ class BartenderGame {
         const current = this.addedIngredients.length;
         const progress = (current / target) * 100;
 
-        const fill = document.getElementById('progress-fill');
-        const text = document.getElementById('progress-text');
-
-        if (fill) fill.style.width = `${progress}%`;
-        if (text) text.textContent = `${Math.round(progress)}%`;
+        console.log(`Progress: ${current}/${target} (${progress}%)`);
     }
 
     updateRecipeList() {
@@ -999,7 +1004,7 @@ class BartenderGame {
         // Додаємо інгредієнти з рецепту
         this.currentCocktail.ingredients.forEach(ing => {
             const li = document.createElement('li');
-            li.className = 'recipe-step';
+            li.className = 'bartender__recipe-step';
 
             const needsFlip = this.alcoholTypes.includes(ing.type);
             const flipIcon = needsFlip ? ' 🔄' : '';
@@ -1011,7 +1016,7 @@ class BartenderGame {
         // Додаємо інструкцію мішання
         const requiredStirs = this.currentCocktail.requiredStirs || 3;
         const stirLi = document.createElement('li');
-        stirLi.className = 'recipe-step stir-step';
+        stirLi.className = 'bartender__recipe-step bartender__recipe-step--stir';
 
         let stirEmojis = '';
         for (let i = 0; i < requiredStirs; i++) {
@@ -1019,9 +1024,9 @@ class BartenderGame {
         }
 
         stirLi.innerHTML = `
-            <div class="stir-instruction">
-                <span class="stir-emoji">${stirEmojis}</span>
-                <span class="stir-text">Stir ${requiredStirs} times</span>
+            <div class="bartender__stir-instruction">
+                <span class="bartender__stir-emoji">${stirEmojis}</span>
+                <span class="bartender__stir-text">Stir ${requiredStirs} times</span>
             </div>
         `;
 
@@ -1029,20 +1034,20 @@ class BartenderGame {
     }
 
     updateLevelProgress() {
-        const levels = document.querySelectorAll('.level');
+        const levels = document.querySelectorAll('.bartender__level');
         const completedCount = document.getElementById('completed-levels');
 
         // Оновлюємо відображення рівнів
         levels.forEach((level, index) => {
-            level.classList.remove('completed', 'current');
+            level.classList.remove('bartender__level--completed', 'bartender__level--current');
 
             const levelNumber = index + 1;
             if (this.completedLevels.includes(levelNumber)) {
-                level.classList.add('completed');
+                level.classList.add('bartender__level--completed');
             }
 
             if (levelNumber === this.currentLevel) {
-                level.classList.add('current');
+                level.classList.add('bartender__level--current');
             }
         });
 
