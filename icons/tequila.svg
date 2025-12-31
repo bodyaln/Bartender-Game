@@ -1,5 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <rect x="15" y="10" width="10" height="25" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
-  <rect x="17" y="8" width="6" height="4" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
-  <path d="M20 15 L18 20 L22 20 Z" fill="#228B22"/>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Пляшка текіли -->
+    <path d="M40,15 L60,15 L62,20 L62,75 Q62,85 50,85 Q38,85 38,75 L38,20 Z" fill="#FFE082" opacity="0.9"/>
+
+    <!-- Світліша частина (вміст) -->
+    <path d="M42,20 L58,20 L60,25 L60,70 Q60,78 50,78 Q40,78 40,70 L40,25 Z" fill="#FFF8E1" opacity="0.9"/>
+
+    <!-- Горловина -->
+    <rect x="45" y="10" width="10" height="10" fill="#D7CCC8"/>
+
+    <!-- Пробка з агави -->
+    <rect x="47" y="5" width="6" height="5" rx="1" fill="#8D6E63"/>
+    <ellipse cx="50" cy="4" rx="4" ry="2" fill="#A1887F"/>
+
+    <!-- Етикетка -->
+    <rect x="38.5" y="40" width="23" height="20" rx="3" fill="#FFF3E0" stroke="#8D6E63" stroke-width="1"/>
+
+    <!-- Назва "TEQUILA" -->
+    <text x="50" y="48" text-anchor="middle" font-family="'Times New Roman', serif" font-size="5" font-weight="bold" fill="#5D4037">
+        TEQUILA
+    </text>
+
+    <!-- Мексиканський символ (сонце) -->
+    <circle cx="50" cy="55" r="3" fill="#FF9800"/>
+    <path d="M50,52 L50,58" stroke="#FF5722" stroke-width="1.5"/>
+    <path d="M47,55 L53,55" stroke="#FF5722" stroke-width="1.5"/>
+    <path d="M48,52 L52,58" stroke="#FF5722" stroke-width="1"/>
+    <path d="M52,52 L48,58" stroke="#FF5722" stroke-width="1"/>
+
+
+    <!-- Блиск на склі -->
+    <ellipse cx="55" cy="30" rx="8" ry="3" fill="#FFFFFF" opacity="0.3" transform="rotate(30 55 30)"/>
 </svg>

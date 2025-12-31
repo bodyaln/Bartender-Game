@@ -1,4 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <rect x="15" y="10" width="10" height="25" fill="#DC143C" stroke="#B22222" stroke-width="1"/>
-  <rect x="17" y="8" width="6" height="4" fill="#DC143C" stroke="#B22222" stroke-width="1"/>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Пляшка вермуту -->
+    <path d="M40,15 L60,15 L62,20 L62,75 Q62,85 50,85 Q38,85 38,75 L38,20 Z" fill="#6A1B9A" opacity="0.9"/>
+
+    <!-- Вміст (червоний вермут) -->
+    <path d="M42,20 L58,20 L60,25 L60,70 Q60,78 50,78 Q40,78 40,70 L40,25 Z" fill="#8E24AA" opacity="0.9"/>
+
+    <!-- Горловина -->
+    <rect x="45" y="10" width="10" height="10" fill="#4A148C"/>
+
+    <!-- Ковпачок -->
+    <rect x="47" y="5" width="6" height="5" rx="1" fill="#AB47BC"/>
+
+    <!-- Етикетка -->
+    <rect x="38" y="37" width="24" height="25" rx="3" fill="#F3E5F5"/>
+
+    <!-- Назва "VERMOUTH" -->
+    <text x="50" y="43" text-anchor="middle" font-family="Georgia, serif" font-size="3" font-weight="bold" fill="#6A1B9A">
+        VERMOUTH
+    </text>
+
+    <!-- Тип -->
+    <text x="50" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#8E24AA">
+        ROSSO
+    </text>
+
+    <!-- Символ вина/трав -->
+    <ellipse cx="50" cy="49" rx="8" ry="4" fill="#CE93D8" opacity="0.5"/>
+
+    <!-- Гілочка рослини (піднята вище) -->
+    <path d="M48,46 Q46,44 44,45" stroke="#4CAF50" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M52,46 Q54,44 56,45" stroke="#4CAF50" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="50" cy="47" r="2" fill="#66BB6A"/>
+
+    <!-- Декоративні лінії на пляшці -->
+    <path d="M45,25 L55,25" stroke="#AB47BC" stroke-width="2" stroke-linecap="round"/>
+    <path d="M45,70 L55,70" stroke="#AB47BC" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Блиск на склі -->
+    <ellipse cx="55" cy="30" rx="8" ry="3" fill="#FFFFFF" opacity="0.3" transform="rotate(30 55 30)"/>
 </svg>

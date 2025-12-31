@@ -1,4 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <rect x="15" y="10" width="10" height="25" fill="#DAA520" stroke="#B8860B" stroke-width="1"/>
-  <rect x="17" y="8" width="6" height="4" fill="#DAA520" stroke="#B8860B" stroke-width="1"/>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Пляшка віскі -->
+    <path d="M40,15 L60,15 L62,20 L62,75 Q62,85 50,85 Q38,85 38,75 L38,20 Z" fill="#8D6E63" opacity="0.9"/>
+
+    <!-- Вміст (золотистий віскі) -->
+    <path d="M42,20 L58,20 L60,25 L60,70 Q60,78 50,78 Q40,78 40,70 L40,25 Z" fill="#D7CCC8" opacity="0.9"/>
+
+    <!-- Горловина -->
+    <rect x="45" y="10" width="10" height="10" fill="#5D4037"/>
+
+    <!-- Ковпачок (дерев'яна пробка) -->
+    <rect x="47" y="5" width="6" height="5" rx="1" fill="#A1887F"/>
+
+    <!-- Етикетка -->
+    <rect x="38" y="35" width="25" height="25" rx="3" fill="#FFF3E0" stroke="#5D4037" stroke-width="1"/>
+
+    <!-- Назва "WHISKEY" -->
+    <text x="50" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="4                                               " font-weight="bold" fill="#5D4037">
+        WHISKEY
+    </text>
+
+    <!-- Тип віскі -->
+    <text x="50" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="4" fill="#8D6E63">
+        BOURBON
+    </text>
+
+    <!-- Символ бочки (витримка в дубі) -->
+    <ellipse cx="50" cy="50" rx="8" ry="4" fill="#8D6E63" opacity="0.7"/>
+    <ellipse cx="50" cy="50" rx="6" ry="3" fill="#A1887F"/>
+
+
+    <!-- Декоративні смужки на пляшці -->
+    <path d="M45,25 L55,25" stroke="#A1887F" stroke-width="2" stroke-linecap="round"/>
+    <path d="M45,70 L55,70" stroke="#A1887F" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Блиск на склі -->
+    <ellipse cx="55" cy="30" rx="8" ry="3" fill="#FFFFFF" opacity="0.3" transform="rotate(30 55 30)"/>
 </svg>

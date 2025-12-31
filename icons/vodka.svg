@@ -1,4 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <rect x="15" y="10" width="10" height="25" fill="#C0C0C0" stroke="#808080" stroke-width="1"/>
-  <rect x="17" y="8" width="6" height="4" fill="#C0C0C0" stroke="#808080" stroke-width="1"/>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Пляшка горілки -->
+    <path d="M40,15 L60,15 L62,20 L62,75 Q62,85 50,85 Q38,85 38,75 L38,20 Z" fill="#E3F2FD" opacity="0.9"/>
+
+    <!-- Вміст (прозора горілка) -->
+    <path d="M42,20 L58,20 L60,25 L60,70 Q60,78 50,78 Q40,78 40,70 L40,25 Z" fill="#F5F5F5" opacity="0.8"/>
+
+    <!-- Горловина -->
+    <rect x="45" y="10" width="10" height="10" fill="#BBDEFB"/>
+
+    <!-- Ковпачок -->
+    <rect x="47" y="5" width="6" height="5" rx="1" fill="#90A4AE"/>
+
+    <!-- Етикетка -->
+    <rect x="38" y="35" width="24" height="25" rx="3" fill="#FFFFFF" stroke="#2196F3" stroke-width="1"/>
+
+    <!-- Назва "VODKA" -->
+    <text x="50" y="42" text-anchor="middle" font-family="'Arial Black', sans-serif" font-size="6" font-weight="bold" fill="#1565C0">
+        VODKA
+    </text>
+
+    <!-- Країна походження -->
+    <text x="50" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="5" fill="#2196F3">
+        RUSSIAN
+    </text>
+
+    <!-- Морозний візерунок (символ холоду) - ОПУЩЕНО НА 2 ПІКСЕЛІ ВНИЗ -->
+    <path d="M46,49 Q48,47 50,49 Q52,51 54,49" stroke="#64B5F6" stroke-width="1.5" fill="none"/>
+    <path d="M48,51 Q50,49 52,51" stroke="#64B5F6" stroke-width="1.5" fill="none"/>
+    <!-- Крижані кристали (підняті на 3 пікселі вгору) -->
+    <path d="M46,47 L44,45" stroke="#42A5F5" stroke-width="1" stroke-linecap="round"/>
+    <path d="M54,47 L56,45" stroke="#42A5F5" stroke-width="1" stroke-linecap="round"/>
+    <path d="M50,45 L50,43" stroke="#42A5F5" stroke-width="1" stroke-linecap="round"/>
+    <path d="M45,25 L55,25" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+    <path d="M45,70 L55,70" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Блиск на склі -->
+    <ellipse cx="55" cy="30" rx="8" ry="3" fill="#FFFFFF" opacity="0.3" transform="rotate(30 55 30)"/>
 </svg>

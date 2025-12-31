@@ -1,5 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <rect x="10" y="10" width="3" height="3" fill="#FFFFFF" stroke="#C0C0C0" stroke-width="1"/>
-  <rect x="20" y="15" width="3" height="3" fill="#FFFFFF" stroke="#C0C0C0" stroke-width="1"/>
-  <rect x="15" y="25" width="3" height="3" fill="#FFFFFF" stroke="#C0C0C0" stroke-width="1"/>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Основа -->
+    <rect x="40" y="40" width="20" height="35" rx="3" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2"/>
+
+    <!-- Верх -->
+    <ellipse cx="50" cy="40" rx="12" ry="5" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2"/>
+
+    <!-- Кришка -->
+    <rect x="45" y="30" width="10" height="10" rx="2" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+
+    <!-- Три отвори -->
+    <circle cx="47" cy="45" r="1" fill="#BDBDBD"/>
+    <circle cx="50" cy="45" r="1" fill="#BDBDBD"/>
+    <circle cx="53" cy="45" r="1" fill="#BDBDBD"/>
+
+    <!-- Сіль -->
+    <circle cx="50" cy="55" r="3" fill="#F5F5F5"/>
+    <circle cx="45" cy="60" r="2" fill="#F5F5F5"/>
+    <circle cx="55" cy="60" r="2" fill="#F5F5F5"/>
 </svg>

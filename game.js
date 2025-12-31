@@ -1,96 +1,328 @@
 // ===== BARTENDER GAME - COMPLETE WITH STATISTICS =====
 
+class ModalManager {
+    constructor() {
+        this.currentModal = null;
+    }
+
+    showMessage(title, message) {
+        return new Promise((resolve) => {
+            this.createModal('message', title, message, [
+                { text: 'OK', className: 'bartender__btn--recipe', value: true }
+            ], resolve);
+        });
+    }
+
+    showConfirm(title, message) {
+        return new Promise((resolve) => {
+            this.createModal('confirm', title, message, [
+                { text: 'Cancel', className: 'bartender__btn--reset', value: false },
+                { text: 'Reset', className: 'bartender__btn--recipe', value: true }
+            ], resolve);
+        });
+    }
+
+    createModal(type, title, message, buttons, callback) {
+        if (this.currentModal) {
+            this.currentModal.remove();
+        }
+
+        const modal = document.createElement('div');
+        modal.className = 'bartender__modal';
+        modal.id = `${type}-modal`;
+
+        modal.innerHTML = `
+            <div class="bartender__modal-content">
+                <div class="bartender__modal-header">
+                    <h3>${title}</h3>
+                    <button class="bartender__modal-close">&times;</button>
+                </div>
+                <div class="bartender__modal-body">
+                    <p>${message}</p>
+                    <div class="bartender__modal-actions">
+                        ${buttons.map(btn => 
+                            `<button class="bartender__btn ${btn.className}">${btn.text}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        this.currentModal = modal;
+        modal.style.display = 'flex';
+
+        const closeBtn = modal.querySelector('.bartender__modal-close');
+        const actionButtons = modal.querySelectorAll('.bartender__btn');
+
+        const closeModal = (result = false) => {
+            modal.style.display = 'none';
+            setTimeout(() => {
+                modal.remove();
+                this.currentModal = null;
+                callback(result);
+            }, 300);
+        };
+
+        closeBtn.addEventListener('click', () => closeModal(false));
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal(false);
+            }
+        });
+
+        actionButtons.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                closeModal(buttons[index].value);
+            });
+        });
+    }
+}
+
+class TouchDragManager {
+    constructor(game) {
+        this.game = game;
+        this.isDragging = false;
+        this.currentElement = null;
+        this.cloneElement = null;
+        this.startX = 0;
+        this.startY = 0;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        this.dragData = null;
+    }
+
+    setupTouchEvents() {
+        if (!this.isTouchDevice) return;
+
+        console.log('Setting up touch events for mobile devices...');
+
+        this.game.ingredients.forEach(ingredient => {
+            ingredient.addEventListener('touchstart', this.handleTouchStart.bind(this));
+            ingredient.addEventListener('touchend', this.handleTouchEnd.bind(this));
+            ingredient.addEventListener('touchmove', this.handleTouchMove.bind(this));
+            ingredient.addEventListener('touchcancel', this.handleTouchCancel.bind(this));
+        });
+
+        this.game.glass.addEventListener('touchmove', this.handleGlassTouchMove.bind(this));
+        this.game.glass.addEventListener('touchend', this.handleGlassTouchEnd.bind(this));
+        this.game.glass.addEventListener('touchleave', this.handleGlassTouchLeave.bind(this));
+        
+        document.addEventListener('touchmove', (e) => {
+            if (this.isDragging) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    }
+
+    handleTouchStart(e) {
+        if (!this.game.levelStarted || !this.game.isTimerRunning) {
+            e.preventDefault();
+            return;
+        }
+
+        const touch = e.touches[0];
+        const ingredient = e.currentTarget;
+        const type = ingredient.dataset.type;
+        const isFlipped = this.game.flipStates[type] || false;
+
+        this.dragData = { type, isFlipped };
+        this.isDragging = true;
+        this.currentElement = ingredient;
+        this.startX = touch.clientX;
+        this.startY = touch.clientY;
+        
+        const rect = ingredient.getBoundingClientRect();
+        this.offsetX = touch.clientX - rect.left;
+        this.offsetY = touch.clientY - rect.top;
+
+        this.createDragClone(ingredient, touch.clientX, touch.clientY);
+        
+        ingredient.style.opacity = '0.7';
+        ingredient.style.transform = 'scale(0.95)';
+        
+        e.preventDefault();
+    }
+
+    handleTouchMove(e) {
+        if (!this.isDragging || !this.cloneElement) return;
+
+        const touch = e.touches[0];
+        
+        this.cloneElement.style.left = `${touch.clientX - this.offsetX}px`;
+        this.cloneElement.style.top = `${touch.clientY - this.offsetY}px`;
+
+        const glassRect = this.game.glass.getBoundingClientRect();
+        const isOverGlass = touch.clientX >= glassRect.left && 
+                           touch.clientX <= glassRect.right &&
+                           touch.clientY >= glassRect.top && 
+                           touch.clientY <= glassRect.bottom;
+
+        if (isOverGlass) {
+            this.game.glass.classList.add('bartender__glass--drop-ready');
+        } else {
+            this.game.glass.classList.remove('bartender__glass--drop-ready');
+        }
+
+        e.preventDefault();
+    }
+
+    handleTouchEnd(e) {
+        if (!this.isDragging) return;
+
+        const touch = e.changedTouches[0];
+        const glassRect = this.game.glass.getBoundingClientRect();
+        const isOverGlass = touch.clientX >= glassRect.left && 
+                           touch.clientX <= glassRect.right &&
+                           touch.clientY >= glassRect.top && 
+                           touch.clientY <= glassRect.bottom;
+
+        if (isOverGlass && this.dragData) {
+            this.game.addIngredientToGlass(this.dragData.type, this.dragData.isFlipped);
+        }
+
+        this.cleanupDrag();
+        e.preventDefault();
+    }
+
+    handleTouchCancel() {
+        this.cleanupDrag();
+    }
+
+    handleGlassTouchMove(e) {
+        if (!this.isDragging) return;
+        this.game.glass.classList.add('bartender__glass--drop-ready');
+        e.preventDefault();
+    }
+
+    handleGlassTouchEnd(e) {
+        if (!this.isDragging) return;
+        this.game.glass.classList.remove('bartender__glass--drop-ready');
+        
+        const touch = e.changedTouches[0];
+        const glassRect = this.game.glass.getBoundingClientRect();
+        const isOverGlass = touch.clientX >= glassRect.left && 
+                           touch.clientX <= glassRect.right &&
+                           touch.clientY >= glassRect.top && 
+                           touch.clientY <= glassRect.bottom;
+
+        if (isOverGlass && this.dragData) {
+            this.game.addIngredientToGlass(this.dragData.type, this.dragData.isFlipped);
+        }
+
+        this.cleanupDrag();
+        e.preventDefault();
+    }
+
+    handleGlassTouchLeave() {
+        if (!this.isDragging) return;
+        this.game.glass.classList.remove('bartender__glass--drop-ready');
+    }
+
+    createDragClone(element, x, y) {
+        this.cloneElement = element.cloneNode(true);
+        this.cloneElement.style.position = 'fixed';
+        this.cloneElement.style.left = `${x - this.offsetX}px`;
+        this.cloneElement.style.top = `${y - this.offsetY}px`;
+        this.cloneElement.style.width = `${element.offsetWidth}px`;
+        this.cloneElement.style.height = `${element.offsetHeight}px`;
+        this.cloneElement.style.zIndex = '1000';
+        this.cloneElement.style.pointerEvents = 'none';
+        this.cloneElement.style.opacity = '0.8';
+        this.cloneElement.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+        this.cloneElement.style.transition = 'transform 0.1s';
+        
+        document.body.appendChild(this.cloneElement);
+    }
+
+    cleanupDrag() {
+        if (this.cloneElement && this.cloneElement.parentNode) {
+            this.cloneElement.remove();
+            this.cloneElement = null;
+        }
+
+        if (this.currentElement) {
+            this.currentElement.style.opacity = '1';
+            this.currentElement.style.transform = '';
+            this.currentElement = null;
+        }
+
+        this.isDragging = false;
+        this.dragData = null;
+        this.game.glass.classList.remove('bartender__glass--drop-ready');
+    }
+}
+
 class BartenderGame {
     constructor() {
         console.log('🍸 Bartender Game - Complete with Statistics');
 
-        // ===== DOM ЕЛЕМЕНТИ =====
+        this.modal = new ModalManager();
         this.ingredients = document.querySelectorAll('.bartender__ingredient');
         this.glass = document.getElementById('target-glass');
         this.glassContent = document.getElementById('glass-content');
         this.nextBtn = document.getElementById('btn-next');
         this.startBtn = document.getElementById('btn-start');
         this.timerElement = document.getElementById('timer');
-        
-        // ===== МОДАЛЬНОЕ ОКНО РЕЦЕПТА =====
         this.recipeModal = document.getElementById('recipe-modal');
         this.recipeBtn = document.getElementById('btn-recipe');
         this.closeModalBtn = document.getElementById('btn-close-modal');
+        this.isLevelResetForReplay = false; 
+        this.touchManager = new TouchDragManager(this);
 
-        // ===== ЕЛЕМЕНТИ СТАТИСТИКИ =====
         this.successRateElement = document.getElementById('success-rate');
         this.avgTimeElement = document.getElementById('avg-time');
         this.gamesPlayedElement = document.getElementById('games-played');
         this.bestTimeElement = document.getElementById('best-time');
 
-        // ===== СТАН ГРИ =====
         this.addedIngredients = [];
         this.stirCount = 0;
         this.isStirring = false;
-
-        // ===== ТАЙМЕР =====
         this.levelTime = 0;
         this.timeElapsed = 0;
         this.timerInterval = null;
         this.isTimerRunning = false;
         this.levelStarted = false;
-
-        // ===== ЛОГІКА ПЕВЕРТАННЯ БУТИЛОК =====
+        this.isGamePaused = false;
         this.flipStates = {};
         this.alcoholTypes = ['rum', 'tequila', 'whiskey', 'vodka', 'gin', 'vermouth', 'soda', 'bitters'];
-
-        // ===== СИСТЕМА РІВНІВ =====
         this.cocktails = [];
 
-        // Завантажуємо збережені дані
         const savedData = JSON.parse(localStorage.getItem('bartenderGame')) || {};
         this.completedLevels = savedData.completedLevels || [];
         this.currentLevel = savedData.currentLevel || 1;
-        this.levelStats = savedData.levelStats || {}; // Статистика по рівням
+        this.levelStats = savedData.levelStats || {};
         this.totalLevels = 0;
-
-        // Найкращий час проходження гри
         this.overallBestTime = savedData.overallBestTime || null;
 
         this.init();
     }
 
-    // ===== ІНІЦІАЛІЗАЦІЯ ГРИ =====
     async init() {
-        console.log('Initializing game with Statistics system...');
+        console.log('Initializing game...');
 
-        // Завантажуємо коктейлі з JSON файлу
         await this.loadCocktails();
         this.totalLevels = this.cocktails.length;
 
-        // Корекція поточного рівня (якщо виходить за межі)
         if (this.currentLevel > this.totalLevels) {
             this.currentLevel = this.totalLevels;
             this.saveGameState();
         }
 
-        // Налаштовуємо Drag & Drop
         this.setupDragAndDrop();
-
-        // Налаштовуємо кнопки
+        this.touchManager.setupTouchEvents();
         this.setupButtons();
-
-        // Налаштовуємо керування перевертанням
         this.setupFlipControls();
-
-        // Налаштовуємо модальне окно
         this.setupModal();
 
-        // Завантажуємо поточний рівень
         this.loadLevel(this.currentLevel);
-
-        // Оновлюємо статистику
         this.updateLevelStatistics();
 
         console.log(`✅ Game ready! Level: ${this.currentLevel}/${this.totalLevels}`);
     }
 
-    // ===== НАСТРОЙКА МОДАЛЬНОГО ОКНА =====
     setupModal() {
         this.recipeBtn.addEventListener('click', () => {
             this.recipeModal.style.display = 'flex';
@@ -107,12 +339,8 @@ class BartenderGame {
         });
     }
 
-    // ===== СИСТЕМА СТАТИСТИКИ =====
     updateLevelStatistics() {
-        // Оновлюємо статистику для поточного рівня
         this.updateCurrentLevelStats();
-
-        // Оновлюємо загальну статистику
         this.updateOverallStats();
     }
 
@@ -124,14 +352,13 @@ class BartenderGame {
             completed: false,
             bestTime: null,
             attempts: 0,
+            totalTime: 0,
             successRate: 0,
             cocktailName: this.currentCocktail.name
         };
 
-        // Перевіряємо чи рівень пройдено
         const isCompleted = this.completedLevels.includes(levelId);
 
-        // Оновлюємо статистику
         this.levelStats[levelId] = {
             ...stats,
             completed: isCompleted,
@@ -143,34 +370,25 @@ class BartenderGame {
     updateOverallStats() {
         if (!this.gamesPlayedElement || !this.successRateElement || !this.avgTimeElement) return;
 
-        // Рахуємо загальну статистику
         let totalAttempts = 0;
         let completedLevels = 0;
-        let totalTime = 0;
-        let completedTimeCount = 0;
+        let totalTimeAllAttempts = 0;
 
         Object.values(this.levelStats).forEach(stats => {
             totalAttempts += stats.attempts || 0;
+            totalTimeAllAttempts += stats.totalTime || 0;
 
             if (stats.completed) {
                 completedLevels++;
-
-                if (stats.bestTime) {
-                    totalTime += stats.bestTime;
-                    completedTimeCount++;
-                }
             }
         });
 
-        // Оновлюємо DOM елементи статистики
         this.gamesPlayedElement.textContent = totalAttempts;
 
-        // Розраховуємо успішність
         if (this.totalLevels > 0) {
             const successRate = Math.round((completedLevels / this.totalLevels) * 100);
             this.successRateElement.textContent = `${successRate}%`;
 
-            // Змінюємо колір в залежності від відсотка
             if (successRate === 100) {
                 this.successRateElement.style.color = '#4CAF50';
             } else if (successRate >= 50) {
@@ -182,9 +400,8 @@ class BartenderGame {
             this.successRateElement.textContent = '0%';
         }
 
-        // Розраховуємо середній час
-        if (completedTimeCount > 0) {
-            const avgSeconds = Math.round(totalTime / completedTimeCount);
+        if (totalAttempts > 0) {
+            const avgSeconds = Math.round(totalTimeAllAttempts / totalAttempts);
             const minutes = Math.floor(avgSeconds / 60);
             const seconds = avgSeconds % 60;
             this.avgTimeElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
@@ -192,19 +409,18 @@ class BartenderGame {
             this.avgTimeElement.textContent = '--:--';
         }
 
-        // Зберігаємо статистику
         this.saveGameState();
     }
 
     recordLevelCompletion(timeTaken) {
         const levelId = this.currentLevel;
-
-        // Записуємо статистику для рівня
+        
         if (!this.levelStats[levelId]) {
             this.levelStats[levelId] = {
                 completed: true,
                 bestTime: timeTaken,
                 attempts: 1,
+                totalTime: timeTaken,
                 successRate: 100,
                 cocktailName: this.currentCocktail?.name || 'Unknown',
                 lastPlayed: new Date().toISOString()
@@ -213,8 +429,8 @@ class BartenderGame {
             const stats = this.levelStats[levelId];
             stats.completed = true;
             stats.attempts = (stats.attempts || 0) + 1;
+            stats.totalTime = (stats.totalTime || 0) + timeTaken;
 
-            // Оновлюємо найкращий час для цього рівня
             if (!stats.bestTime || timeTaken < stats.bestTime) {
                 stats.bestTime = timeTaken;
             }
@@ -223,39 +439,29 @@ class BartenderGame {
             stats.lastPlayed = new Date().toISOString();
         }
 
-        // ОНОВЛЮЄМО ЗАГАЛЬНИЙ НАЙКРАЩИЙ ЧАС (між всіма рівнями)
         if (!this.overallBestTime || timeTaken < this.overallBestTime) {
             this.overallBestTime = timeTaken;
-            console.log(`🏆 НОВИЙ ЗАГАЛЬНИЙ РЕКОРД: ${this.formatTime(timeTaken)}`);
-            this.showNewRecordNotification(timeTaken);
+            this.modal.showMessage('🏆 New Record!', `🎉 NEW GAME RECORD! ${this.formatTime(timeTaken)}`);
         }
 
-        // Додаємо до пройдених рівнів
         if (!this.completedLevels.includes(levelId)) {
             this.completedLevels.push(levelId);
         }
 
-        // Оновлюємо статистику
         this.updateLevelStatistics();
         this.saveGameState();
-
-        console.log(`📊 Level ${levelId} completed in ${timeTaken}s. Stats updated.`);
     }
 
-    showNewRecordNotification(timeTaken) {
-        // Можна додати візуальне сповіщення
-        const formattedTime = this.formatTime(timeTaken);
-        console.log(`🎉 НОВИЙ РЕКОРД ГРИ! ${formattedTime}`);
-    }
-
-    recordLevelFailure() {
+    recordLevelAttempt() {
         const levelId = this.currentLevel;
+        const timeTaken = this.timeElapsed > 0 ? this.timeElapsed : 0;
 
         if (!this.levelStats[levelId]) {
             this.levelStats[levelId] = {
                 completed: false,
                 bestTime: null,
                 attempts: 1,
+                totalTime: timeTaken,
                 successRate: 0,
                 cocktailName: this.currentCocktail?.name || 'Unknown',
                 lastPlayed: new Date().toISOString()
@@ -263,21 +469,21 @@ class BartenderGame {
         } else {
             const stats = this.levelStats[levelId];
             stats.attempts = (stats.attempts || 0) + 1;
-
-            // Розраховуємо успішність
-            const totalAttempts = stats.attempts;
-            const successfulAttempts = stats.completed ? totalAttempts - 1 : 0;
-            stats.successRate = Math.round((successfulAttempts / totalAttempts) * 100);
+            stats.totalTime = (stats.totalTime || 0) + timeTaken;
+            
+            if (!stats.completed) {
+                const totalAttempts = stats.attempts;
+                const successfulAttempts = 0;
+                stats.successRate = Math.round((successfulAttempts / totalAttempts) * 100);
+            }
+            
             stats.lastPlayed = new Date().toISOString();
         }
 
         this.updateLevelStatistics();
         this.saveGameState();
-
-        console.log(`📊 Level ${levelId} failed. Stats updated.`);
     }
 
-    // ===== ЗАВАНТАЖЕННЯ КОКТЕЙЛІВ =====
     async loadCocktails() {
         try {
             const response = await fetch('./cocktails.json');
@@ -327,9 +533,7 @@ class BartenderGame {
         ];
     }
 
-    // ===== ЗАВАНТАЖЕННЯ ТА УПРАВЛІННЯ РІВНЯМИ =====
     loadLevel(levelNumber) {
-        // Перевірка меж рівня
         if (levelNumber < 1) levelNumber = 1;
         if (levelNumber > this.totalLevels) {
             this.showAllLevelsCompleted();
@@ -339,39 +543,31 @@ class BartenderGame {
         this.currentLevel = levelNumber;
         this.currentCocktail = this.cocktails[levelNumber - 1];
 
-        // Скидаємо стан гри
+        this.resetLevelState();
+        this.saveGameState();
+        console.log(`📈 Level ${levelNumber} loaded: ${this.currentCocktail.name}`);
+    }
+
+    resetLevelState() {
         this.resetGlass();
         this.stirCount = 0;
         this.isStirring = false;
-
-        // Скидаємо перевертання бутилок
+        this.isGamePaused = false;
         this.flipStates = {};
         this.updateAllFlipStates();
 
-        // Налаштовуємо таймер
         this.stopTimer();
         this.timeElapsed = 0;
         this.levelStarted = false;
         this.levelTime = this.currentCocktail.timeLimit || 60;
 
-        // Оновлюємо інтерфейс
         this.updateUI();
-
-        // Оновлюємо кнопки
         this.updateNextButton();
         this.updateStartButton();
-
-        // Оновлюємо статистику для цього рівня
         this.updateCurrentLevelStats();
-
-        // Зберігаємо стан гри
-        this.saveGameState();
-
-        console.log(`📈 Level ${levelNumber} loaded: ${this.currentCocktail.name}`);
     }
 
-    showAllLevelsCompleted() {
-        // Показуємо детальну статистику після завершення всіх рівнів
+    async showAllLevelsCompleted() {
         let statsMessage = '📊 YOUR FINAL STATISTICS:\n\n';
 
         for (let i = 1; i <= this.totalLevels; i++) {
@@ -387,9 +583,9 @@ class BartenderGame {
             statsMessage += `   Success: ${successRate}%\n\n`;
         }
 
-        alert(`🎉 CONGRATULATIONS!\n\nYou have completed ALL levels!\n\n${statsMessage}\nClick "Restart" to play again from level 1.`);
+        await this.modal.showMessage('🎉 CONGRATULATIONS!', 
+            `You have completed ALL levels!\n\n${statsMessage}\nClick "Restart" to play again from level 1.`);
 
-        // Скидаємо гру
         this.currentLevel = 1;
         this.completedLevels = [];
         this.saveGameState();
@@ -397,13 +593,11 @@ class BartenderGame {
     }
 
     formatTime(seconds) {
-        // Форматуємо час у формат MM:SS
         const minutes = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${minutes}:${secs.toString().padStart(2, '0')}`;
     }
 
-    // ===== ЗБЕРІГАННЯ ТА ВІДНОВЛЕННЯ СТАНУ ГРИ =====
     saveGameState() {
         const gameState = {
             currentLevel: this.currentLevel,
@@ -418,48 +612,43 @@ class BartenderGame {
     updateUI() {
         if (!this.currentCocktail) return;
 
-        // Оновлюємо назву коктейля
         const cocktailElement = document.getElementById('current-cocktail');
         if (cocktailElement) {
             cocktailElement.innerHTML = `${this.currentCocktail.emoji} ${this.currentCocktail.name}`;
         }
 
-        // Оновлюємо таймер, рецепт, прогрес та статистику
         this.updateTimerDisplay();
         this.updateRecipeList();
         this.updateLevelProgress();
         this.updateStartButton();
-
-        // Показуємо статистику для поточного рівня
         this.showCurrentLevelStats();
     }
 
     showCurrentLevelStats() {
         if (this.bestTimeElement) {
-            if (this.overallBestTime) {
-                this.bestTimeElement.textContent = this.formatTime(this.overallBestTime);
+            const levelStats = this.levelStats[this.currentLevel];
+            if (levelStats && levelStats.bestTime) {
+                this.bestTimeElement.textContent = this.formatTime(levelStats.bestTime);
             } else {
                 this.bestTimeElement.textContent = '0:00';
             }
         }
     }
 
-    // ===== СИСТЕМА ТАЙМЕРА =====
     startTimer() {
         if (this.isTimerRunning) return;
 
         this.isTimerRunning = true;
         this.levelStarted = true;
+        this.isGamePaused = false;
 
         this.updateTimerDisplay();
 
-        // Запускаємо інтервал таймера (1 секунда)
         this.timerInterval = setInterval(() => {
             if (!this.isTimerRunning) return;
             this.timeElapsed++;
             this.updateTimerDisplay();
 
-            // Перевіряємо чи час вийшов
             if (this.timeElapsed >= this.levelTime) {
                 this.timeOut();
             }
@@ -474,6 +663,15 @@ class BartenderGame {
         this.isTimerRunning = false;
     }
 
+    pauseTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+        this.isTimerRunning = false;
+        this.isGamePaused = true;
+    }
+
     updateTimerDisplay() {
         if (!this.timerElement) return;
 
@@ -484,34 +682,118 @@ class BartenderGame {
         this.timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
 
-    timeOut() {
+    async timeOut() {
         this.stopTimer();
-        this.recordLevelFailure();
-        alert(`⏱️ TIME'S UP!\n\nLevel ${this.currentLevel} failed!\n\nYou ran out of time (${this.levelTime}s).`);
-        this.resetGlass();
-        this.levelStarted = false;
-        this.updateStartButton();
+        this.recordLevelAttempt();
+        
+        const confirmed = await this.modal.showConfirm(
+            '⏱️ TIME\'S UP!', 
+            `Level ${this.currentLevel} failed!\n\nYou ran out of time (${this.levelTime}s).\n\nDo you want to try again?`
+        );
+        
+        if (confirmed) {
+            // Пользователь хочет попробовать снова немедленно
+            this.resetLevelState();
+        } else {
+            // Пользователь хочет сначала посмотреть что сделал неправильно
+            // Сбрасываем только состояние игры, но оставляем содержимое стакана для просмотра
+            this.levelStarted = false;
+            this.isTimerRunning = false;
+            this.isGamePaused = false;
+           
+            this.updateStartButton(); // Это важно - обновит текст кнопки на "🎮 Start Level"
+            console.log('⏰ Time out - game state reset for restart option');
+        }
     }
 
     updateStartButton() {
         if (!this.startBtn) return;
-
+        
         if (this.levelStarted && this.isTimerRunning) {
-            this.startBtn.disabled = true;
-            this.startBtn.innerHTML = '⏱️ Time Running...';
-        } else if (this.levelStarted && !this.isTimerRunning) {
-            this.startBtn.disabled = true;
-            this.startBtn.innerHTML = 'Level Completed';
-        } else {
+            this.startBtn.disabled = false;
+            this.startBtn.innerHTML = '⏹️ Stop Game';
+        } else if (this.levelStarted && this.isGamePaused) {
+            this.startBtn.disabled = false;
+            this.startBtn.innerHTML = '🏃‍♂️ Continue Game';
+        } else if (this.isLevelResetForReplay) {
+            // Уровень сброшен для повторного прохождения
             this.startBtn.disabled = false;
             this.startBtn.innerHTML = '🎮 Start Level';
+        } else if (this.completedLevels.includes(this.currentLevel)) {
+            // Уровень пройден и не сброшен
+            this.startBtn.disabled = false;
+            this.startBtn.innerHTML = '🔄 Reset Level';
+        } else {
+            // Обычный непройденный уровень
+
+            this.startBtn.disabled = false;
+            this.startBtn.innerHTML = '🎮 Start Level';
+            
         }
     }
 
-    // ===== ЛОГІКА ПЕВЕРТАННЯ БУТИЛОК =====
+    // НОВЫЙ МЕТОД: Сброс уровня для повторного прохождения
+    async resetCompletedLevel() {
+    // Записываем попытку в статистику, если игра уже была начата в этой сессии
+    if (this.levelStarted && this.timeElapsed > 0) {
+        this.recordLevelAttempt();
+    }
+    
+    // Сбрасываем состояние уровня, но НЕ удаляем его из пройденных
+    this.resetGlass();
+    this.stirCount = 0;
+    this.isStirring = false;
+    this.isGamePaused = false;
+    this.flipStates = {};
+    this.updateAllFlipStates();
+    this.stopTimer();
+    this.timeElapsed = 0;
+    this.levelStarted = false;
+    
+    // ВАЖНО: Не сбрасываем this.levelTime, оставляем исходное значение
+    if (!this.levelTime || this.levelTime === 0) {
+        this.levelTime = this.currentCocktail.timeLimit || 60;
+    }
+    
+    // Обновляем UI
+    this.updateTimerDisplay();
+    this.updateRecipeList();
+    this.updateLevelProgress();
+    this.updateNextButton();
+    
+    // Не меняем кнопку на "Start Level", оставляем возможность сброса
+    this.startBtn.disabled = false;
+    this.startBtn.innerHTML = '🔄 Reset Level';
+    
+    console.log(`🔄 Level ${this.currentLevel} reset for replay (stats preserved)`);
+    
+    await this.modal.showMessage('Level Reset', `🔄 Level ${this.currentLevel} has been reset for replay!`);
+    }
+
     setupFlipControls() {
         this.ingredients.forEach(ing => {
-            // Подвійне натискання для перевертання
+            let tapCount = 0;
+            let tapTimer;
+
+            ing.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                tapCount++;
+                
+                if (tapCount === 1) {
+                    tapTimer = setTimeout(() => {
+                        tapCount = 0;
+                    }, 300);
+                } else if (tapCount === 2) {
+                    clearTimeout(tapTimer);
+                    tapCount = 0;
+                    
+                    const type = ing.dataset.type;
+                    if (this.alcoholTypes.includes(type)) {
+                        this.toggleFlip(type);
+                    }
+                }
+            });
+
             ing.addEventListener('dblclick', (e) => {
                 e.preventDefault();
                 const type = ing.dataset.type;
@@ -520,7 +802,6 @@ class BartenderGame {
                 }
             });
 
-            // Правий клік для перевертання
             ing.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 const type = ing.dataset.type;
@@ -573,10 +854,8 @@ class BartenderGame {
         });
     }
 
-    // ===== DRAG & DROP СИСТЕМА =====
     setupDragAndDrop() {
         this.ingredients.forEach(ingredient => {
-            // Початок перетягування
             ingredient.addEventListener('dragstart', (e) => {
                 if (!this.levelStarted || !this.isTimerRunning) {
                     e.preventDefault();
@@ -586,7 +865,6 @@ class BartenderGame {
                 const type = ingredient.dataset.type;
                 const isFlipped = this.flipStates[type] || false;
 
-                // Зберігаємо дані для передачі
                 e.dataTransfer.setData('text/plain', JSON.stringify({
                     type: type,
                     isFlipped: isFlipped
@@ -595,13 +873,11 @@ class BartenderGame {
                 ingredient.style.opacity = '0.7';
             });
 
-            // Кінець перетягування
             ingredient.addEventListener('dragend', (e) => {
                 ingredient.style.opacity = '1';
             });
         });
 
-        // Обробники для келиха
         this.glass.addEventListener('dragover', (e) => {
             e.preventDefault();
             this.glass.classList.add('bartender__glass--drop-ready');
@@ -628,22 +904,20 @@ class BartenderGame {
         });
     }
 
-    addIngredientToGlass(type, isFlipped) {
+    async addIngredientToGlass(type, isFlipped) {
         if (this.addedIngredients.length >= 8) return;
 
-        // Перевірка чи бутилку перевернуто
         if (this.alcoholTypes.includes(type) && !isFlipped) {
-            alert(`🔄 You must FLIP ${type.toUpperCase()} bottle upside down first!\n\nDouble-click or right-click to flip.`);
+            await this.modal.showMessage('Flip Required', 
+                `🔄 You must FLIP ${type.toUpperCase()} bottle upside down first!\n\nDouble-tap on mobile or double-click on desktop to flip.`);
             return;
         }
 
-        // Створюємо елемент інгредієнта в келиху
         const element = document.createElement('div');
         element.className = 'bartender__glass-ingredient';
         element.textContent = type.toUpperCase();
         element.dataset.type = type;
 
-        // Додаємо позначку перевернутої бутилки
         if (isFlipped && this.alcoholTypes.includes(type)) {
             element.classList.add('bartender__glass-ingredient--flipped');
 
@@ -653,13 +927,11 @@ class BartenderGame {
             element.appendChild(flipBadge);
         }
 
-        // Розміщуємо інгредієнт в келиху
         const pos = this.calculateIngredientPosition();
         element.style.left = `${pos.x}%`;
         element.style.top = `${pos.y}%`;
         element.style.animation = 'popIn 0.5s ease';
 
-        // Додаємо до келиха
         this.glassContent.appendChild(element);
         this.addedIngredients.push({
             type: type,
@@ -668,11 +940,9 @@ class BartenderGame {
         });
 
         this.updateProgress();
-        console.log(`✅ Added ${type} (was flipped: ${isFlipped})`);
     }
 
     calculateIngredientPosition() {
-        // Розрахунок позиції для нового інгредієнта в келиху
         const total = this.addedIngredients.length;
         if (total === 0) return { x: 40, y: 70 };
 
@@ -694,44 +964,41 @@ class BartenderGame {
         };
     }
 
-    // ===== ПЕРЕВІРКА РІШЕННЯ ТА ЛОГІКА ГРИ =====
-    checkSolution() {
+    async checkSolution() {
         if (!this.levelStarted) {
-            alert('❌ Start the level first!');
+            await this.modal.showMessage('Error', '❌ Start the level first!');
             return;
         }
 
         if (!this.isTimerRunning) {
-            alert('❌ Time is up or level not started!');
+            await this.modal.showMessage('Error', '❌ Time is up or level not started!');
             return;
         }
 
         if (!this.currentCocktail) {
-            alert('❌ No cocktail loaded!');
+            await this.modal.showMessage('Error', '❌ No cocktail loaded!');
             return;
         }
 
         if (this.addedIngredients.length === 0) {
-            alert('❌ Glass is empty!');
+            await this.modal.showMessage('Error', '❌ Glass is empty!');
             return;
         }
 
-        // Перевіряємо інгредієнти та мішання
-        const ingredientsCorrect = this.checkIngredients();
+        const ingredientsCorrect = await this.checkIngredients();
         const stirsCorrect = this.checkStirs();
 
         if (ingredientsCorrect && stirsCorrect) {
-            this.levelCompleted();
+            await this.levelCompleted();
         } else {
-            this.levelFailed(ingredientsCorrect, stirsCorrect);
+            await this.levelFailed(ingredientsCorrect, stirsCorrect);
         }
     }
 
-    checkIngredients() {
+    async checkIngredients() {
         const required = this.currentCocktail.ingredients;
         const added = this.addedIngredients;
 
-        // Рахуємо кількість кожного типу інгредієнтів
         const addedCounts = {};
         const flippedCounts = {};
 
@@ -742,69 +1009,49 @@ class BartenderGame {
             }
         });
 
-        // Перевіряємо кожен необхідний інгредієнт
         for (const req of required) {
             const addedQty = addedCounts[req.type] || 0;
 
-            // Перевірка кількості
             if (addedQty < req.quantity) {
-                console.log(`❌ Missing ${req.type}`);
                 return false;
             }
 
-            // Перевірка перевертання для алкогольних напоїв
             if (this.alcoholTypes.includes(req.type)) {
                 const flippedQty = flippedCounts[req.type] || 0;
                 if (flippedQty < req.quantity) {
-                    alert(`❌ ${req.type.toUpperCase()} must be poured from FLIPPED bottle!`);
+                    await this.modal.showMessage('Error', `❌ ${req.type.toUpperCase()} must be poured from FLIPPED bottle!`);
                     return false;
                 }
             }
         }
 
-        console.log('✅ All ingredients correct!');
         return true;
     }
 
-    // ===== ПЕРЕВІРКА РІШЕННЯ ТА ЛОГІКА ГРИ =====
     checkStirs() {
         const required = this.currentCocktail.requiredStirs || 3;
         const actual = this.stirCount;
-
-        console.log(`Stirs: need ${required}, have ${actual}`);
-
-        // Нова версія (потрібно точної відповідності):
-        const isCorrect = actual === required;
-
-        if (isCorrect) {
-            console.log('✅ Stirring correct!');
-        } else {
-            console.log(`❌ Stirring wrong! Need exactly ${required}`);
-        }
-
-        return isCorrect;
+        return actual === required;
     }
 
-    levelCompleted() {
+    async levelCompleted() {
         this.stopTimer();
-
-        // Записуємо успішне завершення
+        this.levelStarted = false;
+        console.log(`🎉 Level ${this.currentLevel} completed in ${this.timeElapsed}s!`);
+        
         this.recordLevelCompletion(this.timeElapsed);
-
-        // Оновлюємо інтерфейс
+        
         this.updateLevelProgress();
         this.updateNextButton();
         this.updateStartButton();
-
-        // Формуємо повідомлення про успіх
+        
         let message = `✅ Level ${this.currentLevel} completed in ${this.formatTime(this.timeElapsed)}!`;
 
-        // Показуємо найкращий час
         const stats = this.levelStats[this.currentLevel];
         if (stats && stats.bestTime) {
             const previousBest = stats.bestTime;
             if (this.timeElapsed < previousBest) {
-                message += `\n\n🏆 NEW BEST TIME! (Previous: ${this.formatTime(previousBest)})`;
+                message += `\n\n🏆 NEW LEVEL RECORD! (Previous: ${this.formatTime(previousBest)})`;
             } else {
                 message += `\n\n⏱️ Best time: ${this.formatTime(previousBest)}`;
             }
@@ -815,12 +1062,11 @@ class BartenderGame {
         } else {
             message += `\n\n🎉 You completed ALL levels!`;
         }
-
-        alert(message);
+     
+        await this.modal.showMessage('Level Completed!', message);
     }
 
-    levelFailed(ingredientsCorrect, stirsCorrect) {
-        this.recordLevelFailure();
+    async levelFailed(ingredientsCorrect, stirsCorrect) {
 
         let message = '❌ ';
         if (!ingredientsCorrect && !stirsCorrect) {
@@ -831,14 +1077,19 @@ class BartenderGame {
             message += 'Wrong stirring!';
         }
 
-        message += '\n\nTry again!';
-        alert(message);
+        message += '\n\nDo you want to try again?';
+        
+        const confirmed = await this.modal.showConfirm('Level Failed', message);
+        
+        if (confirmed) {
+            this.stopTimer();
+            this.resetLevelState();
+        }
     }
 
-    // ===== МІШАННЯ КОКТЕЙЛІВ =====
-    stirGlass() {
+    async stirGlass() {
         if (this.addedIngredients.length === 0) {
-            alert('❌ Glass is empty!');
+            await this.modal.showMessage('Error', '❌ Glass is empty!');
             return;
         }
 
@@ -847,7 +1098,11 @@ class BartenderGame {
         this.isStirring = true;
         this.stirCount++;
 
-        // Запускаємо анімацію мішання
+        const stirCountElement = document.getElementById('stir-count');
+        if (stirCountElement) {
+            stirCountElement.textContent = this.stirCount;
+        }
+
         this.glass.classList.add('bartender__glass--stirring');
         this.mixIngredients();
 
@@ -858,7 +1113,6 @@ class BartenderGame {
     }
 
     mixIngredients() {
-        // Змішуємо інгредієнти в келиху
         this.addedIngredients.forEach(ingredient => {
             if (ingredient.element) {
                 const moveX = (Math.random() * 10 - 5);
@@ -879,30 +1133,82 @@ class BartenderGame {
         });
     }
 
-    // ===== УПРАВЛІННЯ КНОПКАМИ ТА ІНТЕРФЕЙСОМ =====
-    setupButtons() {
-        // Кнопка Start Level
-        if (this.startBtn) {
-            this.startBtn.addEventListener('click', () => {
-                this.startLevel();
-            });
-        }
 
-        // Кнопка Reset
+    async resetCompletedLevelForReplay() {
+        // Сбрасываем состояние, но оставляем уровень в пройденных
+        this.resetGlass();
+        this.stirCount = 0;
+        this.isStirring = false;
+        this.isGamePaused = false;
+        this.flipStates = {};
+        this.updateAllFlipStates();
+        this.stopTimer();
+        this.timeElapsed = 0;
+        this.levelStarted = false;
+        
+        // Устанавливаем флаг, что уровень сброшен для повторного прохождения
+        this.isLevelResetForReplay = true;
+        
+        // ВАЖНО: не удаляем уровень из completedLevels!
+        
+        // Обновляем UI
+        this.updateTimerDisplay();
+        this.updateRecipeList();
+        this.updateLevelProgress();
+        this.updateNextButton();
+        this.updateStartButton(); // Это установит кнопку как "🎮 Start Level"
+        
+        await this.modal.showMessage('Level Reset', `🔄 Level ${this.currentLevel} has been reset for replay!`);
+    }
+
+    setupButtons() {
+       if (this.startBtn) {
+        this.startBtn.addEventListener('click', async () => {
+        if (!this.levelStarted && !this.isTimerRunning) {
+            // Если уровень сброшен для повторного прохождения
+            if (this.isLevelResetForReplay) {
+            await this.startLevel();
+            this.isLevelResetForReplay = false; // Сбрасываем флаг после старта
+            return;
+            }
+            
+            // Если уровень уже пройден и нажата кнопка "Reset Level"
+            if (this.completedLevels.includes(this.currentLevel)) {
+            const confirmed = await this.modal.showConfirm(
+                'Reset Level',
+                `Do you want to replay level ${this.currentLevel}? Your previous completion and statistics will be preserved.`
+            );
+            if (confirmed) {
+                await this.resetCompletedLevelForReplay();
+            }
+            } else {
+            // Если уровень не пройден, начинаем его
+            await this.startLevel();
+            }
+        } else if (this.levelStarted && this.isTimerRunning) {
+            this.pauseTimer();
+            this.updateStartButton();
+            await this.modal.showMessage('Game Paused', '⏸️ Game paused. Click "Continue Game" to resume.');
+        } else if (this.levelStarted && this.isGamePaused) {
+            this.startTimer();
+            this.updateStartButton();
+        }
+        });
+    }
+
         const resetBtn = document.getElementById('btn-reset');
         if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                if (this.levelStarted && this.isTimerRunning) {
-                    if (confirm('Reset glass?')) {
-                        this.resetGlass();
-                    }
-                } else {
+            resetBtn.addEventListener('click', async () => {
+                const confirmed = await this.modal.showConfirm(
+                    'Reset Glass',
+                    'Are you sure you want to reset the glass? This will remove all ingredients.'
+                );
+                if (confirmed) {
                     this.resetGlass();
                 }
             });
         }
 
-        // Кнопка Check
         const checkBtn = document.getElementById('btn-check');
         if (checkBtn) {
             checkBtn.addEventListener('click', () => {
@@ -910,23 +1216,23 @@ class BartenderGame {
             });
         }
 
-        // Кнопка Stir
         const stirBtn = document.getElementById('btn-stir');
         if (stirBtn) {
             stirBtn.addEventListener('click', () => {
-                if (!this.levelStarted || !this.isTimerRunning) return;
+                if (!this.levelStarted || !this.isTimerRunning) {
+                    this.modal.showMessage('Error', 'Start the game first!');
+                    return;
+                }
                 this.stirGlass();
             });
         }
 
-        // Кнопка Next
         if (this.nextBtn) {
             this.nextBtn.addEventListener('click', () => {
                 this.nextLevel();
             });
         }
 
-        // Кнопка Solution
         const solutionBtn = document.getElementById('btn-solution');
         if (solutionBtn) {
             solutionBtn.addEventListener('click', () => {
@@ -934,17 +1240,19 @@ class BartenderGame {
             });
         }
 
-        // Кнопка Restart
         const restartBtn = document.getElementById('btn-restart');
         if (restartBtn) {
-            restartBtn.addEventListener('click', () => {
-                if (confirm('Restart game from level 1? All statistics will be lost.')) {
+            restartBtn.addEventListener('click', async () => {
+                const confirmed = await this.modal.showConfirm(
+                    'Restart Game',
+                    'Are you sure you want to restart the game from level 1? All statistics will be lost.'
+                );
+                if (confirmed) {
                     this.restartGame();
                 }
             });
         }
 
-        // Кнопка Statistics
         const statsBtn = document.getElementById('btn-stats');
         if (statsBtn) {
             statsBtn.addEventListener('click', () => {
@@ -953,8 +1261,7 @@ class BartenderGame {
         }
     }
 
-    showDetailedStatistics() {
-        // Формуємо детальну статистику
+    async showDetailedStatistics() {
         let statsMessage = '📊 DETAILED STATISTICS:\n\n';
 
         for (let i = 1; i <= this.totalLevels; i++) {
@@ -971,7 +1278,6 @@ class BartenderGame {
             statsMessage += `   Success: ${successRate}%\n\n`;
         }
 
-        // Загальна статистика
         const totalAttempts = Object.values(this.levelStats).reduce((sum, stats) => sum + (stats.attempts || 0), 0);
         const completedLevels = Object.values(this.levelStats).filter(stats => stats.completed).length;
         const overallSuccess = this.totalLevels > 0 ? Math.round((completedLevels / this.totalLevels) * 100) : 0;
@@ -981,18 +1287,15 @@ class BartenderGame {
         statsMessage += `   Total attempts: ${totalAttempts}\n`;
         statsMessage += `   Overall success: ${overallSuccess}%`;
 
-        alert(statsMessage);
+        await this.modal.showMessage('Detailed Statistics', statsMessage);
     }
 
-    // ===== ДОПОМІЖНІ МЕТОДИ =====
     updateProgress() {
         if (!this.currentCocktail) return;
 
         const target = this.currentCocktail.ingredients.length;
         const current = this.addedIngredients.length;
-        const progress = (current / target) * 100;
-
-        console.log(`Progress: ${current}/${target} (${progress}%)`);
+        console.log(`Progress: ${current}/${target}`);
     }
 
     updateRecipeList() {
@@ -1001,7 +1304,6 @@ class BartenderGame {
 
         recipeList.innerHTML = '';
 
-        // Додаємо інгредієнти з рецепту
         this.currentCocktail.ingredients.forEach(ing => {
             const li = document.createElement('li');
             li.className = 'bartender__recipe-step';
@@ -1013,7 +1315,6 @@ class BartenderGame {
             recipeList.appendChild(li);
         });
 
-        // Додаємо інструкцію мішання
         const requiredStirs = this.currentCocktail.requiredStirs || 3;
         const stirLi = document.createElement('li');
         stirLi.className = 'bartender__recipe-step bartender__recipe-step--stir';
@@ -1037,7 +1338,6 @@ class BartenderGame {
         const levels = document.querySelectorAll('.bartender__level');
         const completedCount = document.getElementById('completed-levels');
 
-        // Оновлюємо відображення рівнів
         levels.forEach((level, index) => {
             level.classList.remove('bartender__level--completed', 'bartender__level--current');
 
@@ -1072,37 +1372,47 @@ class BartenderGame {
         }
     }
 
-    // ===== УПРАВЛІННЯ РІВНЯМИ =====
-    startLevel() {
-        if (this.completedLevels.includes(this.currentLevel)) {
-            alert('✅ This level is already completed!');
+    async startLevel() {
+        // Если уровень уже пройден, но мы сбрасываем для повторного прохождения
+        if (this.completedLevels.includes(this.currentLevel) && this.isLevelResetForReplay) {
+            this.resetLevelState();
+            this.isLevelResetForReplay = false;
+        } 
+        // Если уровень уже пройден и не сброшен для повторного прохождения
+        else if (this.completedLevels.includes(this.currentLevel)) {
+            await this.modal.showMessage('Level Completed', '✅ This level is already completed!');
             return;
         }
-
-        if (this.levelStarted && this.isTimerRunning) {
-            alert('⚠️ Level already in progress!');
+        // Если игра уже запущена
+        else if (this.levelStarted && this.isTimerRunning) {
+            await this.modal.showMessage('Game in Progress', '⚠️ Level already in progress!');
             return;
         }
-
+        
+        // ВАЖНО: Полностью сбрасываем стакан перед началом
         this.resetGlass();
+         this.timeElapsed = 0;
+        this.levelTime = this.currentCocktail.timeLimit || 60;
         this.startTimer();
         this.updateStartButton();
-
-        alert(`🎮 Level ${this.currentLevel} started!\n\nTime limit: ${this.levelTime} seconds`);
+        
+        // Показываем сообщение только для первого прохождения или после сброса
+        await this.modal.showMessage('Level Started', `🎮 Level ${this.currentLevel} started!\nTime limit: ${this.levelTime} seconds`);
     }
 
-    restartGame() {
+    async restartGame() {
         this.stopTimer();
         this.currentLevel = 1;
         this.completedLevels = [];
         this.levelStats = {};
+        this.overallBestTime = null;
         this.saveGameState();
         this.loadLevel(1);
         this.updateLevelStatistics();
-        alert('🔄 Game restarted from level 1! Statistics cleared.');
+        await this.modal.showMessage('Game Restarted', '🔄 Game restarted from level 1! Statistics cleared.');
     }
 
-    showSolution() {
+    async showSolution() {
         if (!this.currentCocktail) return;
 
         const requiredStirs = this.currentCocktail.requiredStirs || 3;
@@ -1111,17 +1421,18 @@ class BartenderGame {
             return `${i.type}${needsFlip ? ' (FLIPPED)' : ''}`;
         }).join(', ');
 
-        alert(`📖 Solution:\n\nIngredients: ${ingredients}\nStir: ${requiredStirs} times\nTime limit: ${this.levelTime}s`);
+        await this.modal.showMessage('Solution', 
+            `📖 Solution:\n\nIngredients: ${ingredients}\nStir: ${requiredStirs} times\nTime limit: ${this.levelTime}s`);
     }
 
-    nextLevel() {
+    async nextLevel() {
         if (!this.completedLevels.includes(this.currentLevel)) {
-            alert('❌ Complete current level first!');
+            await this.modal.showMessage('Error', '❌ Complete current level first!');
             return;
         }
 
         if (this.currentLevel >= this.totalLevels) {
-            alert('🎉 You have completed all levels!');
+            await this.modal.showMessage('Congratulations', '🎉 You have completed all levels!');
             return;
         }
 
@@ -1130,20 +1441,23 @@ class BartenderGame {
     }
 
     resetGlass() {
-        // Очищаємо келих
-        this.addedIngredients.forEach(ingredient => {
-            if (ingredient.element) {
-                ingredient.element.remove();
-            }
-        });
+        if (this.glassContent) {
+            this.glassContent.innerHTML = '';
+        }
 
         this.addedIngredients = [];
         this.stirCount = 0;
+        
+        const stirCountElement = document.getElementById('stir-count');
+        if (stirCountElement) {
+            stirCountElement.textContent = this.stirCount;
+        }
+        
         this.updateProgress();
+        console.log('✅ Glass reset');
     }
 }
 
-// ===== ЗАПУСК ГРИ =====
 document.addEventListener('DOMContentLoaded', () => {
     try {
         const game = new BartenderGame();
