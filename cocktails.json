@@ -18,7 +18,7 @@
       "hint": "Start with fresh mint and lime",
       "solution": "Mint → Lime → Sugar → Rum → Soda → Ice → Stir 3 times"
     },
-    
+
     {
       "id": 2,
       "name": "Margarita",
@@ -115,22 +115,6 @@
     },
     {
       "id": 8,
-      "name": "Whiskey Sour",
-      "emoji": "🥃",
-      "difficulty": "medium",
-      "timeLimit": 40,
-      "ingredients": [
-        { "type": "whiskey", "quantity": 1 },
-        { "type": "lemon_juice", "quantity": 1 },
-        { "type": "sugar", "quantity": 1 },
-        { "type": "egg_white", "quantity": 1 }
-      ],
-      "requiredStirs": 2,
-      "hint": "Dry shake first for egg white foam",
-      "solution": "Whiskey + Lemon juice + Sugar + Egg white → Stir 2 times"
-    },
-    {
-      "id": 9,
       "name": "Negroni",
       "emoji": "🍷",
       "difficulty": "hard",

@@ -11,7 +11,7 @@ class ModalManager {
         "message",
         title,
         message,
-        [{ text: "OK", className: "bartender__btn--recipe", value: true }],
+        [{ text: "OK", className: "bartender__btn--start", value: true }],
         resolve
       );
     });
@@ -24,8 +24,8 @@ class ModalManager {
         title,
         message,
         [
-          { text: "Cancel", className: "bartender__btn--reset", value: false },
-          { text: "Reset", className: "bartender__btn--recipe", value: true },
+          { text: "Cancel", className: "bartender__btn--cancel", value: false },
+          { text: "Reset", className: "bartender__btn--reset", value: true },
         ],
         resolve
       );
@@ -1615,10 +1615,10 @@ class BartenderGame {
         <div class="bartender__modal-body">
             <p>You have completed ALL levels!</p>
             <div class="bartender__modal-actions" style="margin-top: 20px; justify-content: space-around;">
-                <button class="bartender__btn bartender__btn--reset" id="btn-view-stats">
+                <button class="bartender__btn bartender__btn--start" id="btn-view-stats">
                     📊 View Statistics
                 </button>
-                <button class="bartender__btn bartender__btn--recipe" id="btn-restart-full">
+                <button class="bartender__btn bartender__btn--reset" id="btn-restart-full">
                     🔄 Restart Game
                 </button>
             </div>
@@ -1815,7 +1815,7 @@ class PWAManager {
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker
-          .register("/sw.js")
+          .register("./sw.js")
           .then((registration) => {
             console.log(
               "[PWA] ServiceWorker registered with scope:",

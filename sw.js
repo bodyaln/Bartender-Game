@@ -39,19 +39,16 @@ const urlsToCache = [
 
 // Install event - кешируем ресурсы при установке
 self.addEventListener("install", (event) => {
-  console.log("[ServiceWorker] Installing...");
   event.waitUntil(
     caches
       .open(CACHE_NAME)
       .then((cache) => {
-        console.log("[ServiceWorker] Caching app shell");
         return cache.addAll(urlsToCache).catch((error) => {
           console.error("[ServiceWorker] Caching failed:", error);
           throw error;
         });
       })
       .then(() => {
-        console.log("[ServiceWorker] Skip waiting");
         return self.skipWaiting();
       })
   );
@@ -59,7 +56,6 @@ self.addEventListener("install", (event) => {
 
 // Activate event - очищаем старый кеш
 self.addEventListener("activate", (event) => {
-  console.log("[ServiceWorker] Activating...");
   const cacheWhitelist = [CACHE_NAME];
 
   event.waitUntil(
@@ -69,14 +65,12 @@ self.addEventListener("activate", (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheWhitelist.indexOf(cacheName) === -1) {
-              console.log("[ServiceWorker] Deleting old cache:", cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
       .then(() => {
-        console.log("[ServiceWorker] Claiming clients");
         return self.clients.claim();
       })
   );
@@ -96,17 +90,13 @@ self.addEventListener("fetch", (event) => {
     caches.match(event.request).then((response) => {
       // Если ресурс есть в кеше, возвращаем его
       if (response) {
-        console.log(`[ServiceWorker] Cache hit for: ${event.request.url}`);
         return response;
       }
 
-      // Клонируем запрос, так как fetch() может быть использован только один раз
       const fetchRequest = event.request.clone();
 
-      // Делаем запрос к сети
       return fetch(fetchRequest)
         .then((response) => {
-          // Проверяем, является ли ответ корректным
           if (
             !response ||
             response.status !== 200 ||
@@ -121,9 +111,6 @@ self.addEventListener("fetch", (event) => {
           // Кешируем только GET запросы
           if (event.request.method === "GET") {
             caches.open(CACHE_NAME).then((cache) => {
-              console.log(
-                `[ServiceWorker] Caching new resource: ${event.request.url}`
-              );
               cache.put(event.request, responseToCache);
             });
           }
@@ -175,5 +162,3 @@ self.addEventListener("push", (event) => {
 
   event.waitUntil(self.registration.showNotification(title, options));
 });
-
-console.log(`[ServiceWorker] Registered. Version: ${CACHE_NAME}`);

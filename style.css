@@ -217,6 +217,15 @@ body {
     color: var(--accent);
 }
 
+.bartender__modal-actions{
+    display: flex;
+    margin: 10px;
+    gap: 10px;
+}
+.bartender__modal-body p {
+    margin: 20px;
+}
+
 .bartender__recipe-list {
     list-style: none;
     padding-left: 0;
@@ -1035,6 +1044,7 @@ body.offline::before {
 }
 
 .bartender__btn--install {
+  margin: 20px auto;
   animation: install-pulse 2s infinite;
   background: linear-gradient(45deg, #ff4081, #ff9100);
   transform: scale(1.02);
