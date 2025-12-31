@@ -3,16 +3,10 @@
 
 <head>
     <title>🍸 Bartender Game - Drag & Drop PWA</title>
-
-    <!-- Styles -->
     <link rel="stylesheet" href="./style.css">
-
-    <!-- Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap"
         rel="stylesheet">
-
-    <!-- Meta tags -->
     <meta name="description" content="Drag & Drop cocktail mixing game - PWA for Web Technologies course">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,16 +25,16 @@
 
 <body>
     <div class="bartender">
-        <!-- Header -->
+
         <header class="bartender__header">
             <h1 class="bartender__title">🎮 <span class="bartender__logo rainbow-text">Bartender Game</span></h1>
         </header>
 
-        <!-- Main Content -->
+
         <main class="bartender__main">
-            <!-- Game Panel -->
+
             <section class="bartender__game-panel">
-                <!-- Game Header with Recipe Button -->
+
                 <div class="bartender__game-header">
                     <h2 class="bartender__cocktail-title">
                         <span id="current-cocktail">🍹 Mojito</span>
@@ -62,7 +56,6 @@
                     </div>
                 </div>
 
-                <!-- Recipe Modal -->
                 <div id="recipe-modal" class="bartender__modal">
                     <div class="bartender__modal-content">
                         <div class="bartender__modal-header">
@@ -85,9 +78,9 @@
                     </div>
                 </div>
 
-                <!-- First Group of Ingredients (Alcohol, Liqueurs, Juices) -->
+
                 <div class="bartender__ingredients-group" id="ingredients-group-1">
-                    <!-- Alcohol Ingredients -->
+
                     <div class="bartender__ingredient" draggable="true" data-type="rum">
                         <img src="./icons/rum.svg" alt="Rum" class="bartender__ingredient-icon">
                         <span class="bartender__ingredient-name">Rum</span>
@@ -118,7 +111,6 @@
                         <span class="bartender__ingredient-quantity">x1</span>
                     </div>
 
-                    <!-- Liqueurs -->
                     <div class="bartender__ingredient" draggable="true" data-type="triple_sec">
                         <img src="./icons/triple-sec.svg" alt="Triple Sec" class="bartender__ingredient-icon">
                         <span class="bartender__ingredient-name">Triple Sec</span>
@@ -137,7 +129,7 @@
                         <span class="bartender__ingredient-quantity">x1</span>
                     </div>
 
-                    <!-- Juices -->
+
                     <div class="bartender__ingredient" draggable="true" data-type="lime_juice">
                         <img src="./icons/lime-juice.svg" alt="Lime Juice" class="bartender__ingredient-icon">
                         <span class="bartender__ingredient-name">Lime Juice</span>
@@ -157,7 +149,7 @@
                     </div>
                 </div>
 
-                <!-- Glass Area -->
+
                 <div class="bartender__glass-area">
                     <div class="bartender__glass-container">
                         <div class="bartender__glass" id="target-glass">
@@ -166,9 +158,9 @@
                     </div>
                 </div>
 
-                <!-- Second Group of Ingredients (Garnishes, Other) -->
+
                 <div class="bartender__ingredients-group" id="ingredients-group-2">
-                    <!-- Garnishes -->
+
                     <div class="bartender__ingredient" draggable="true" data-type="mint">
                         <img src="./icons/mint.svg" alt="Mint" class="bartender__ingredient-icon">
                         <span class="bartender__ingredient-name">Mint</span>
@@ -205,7 +197,7 @@
                         <span class="bartender__ingredient-quantity">x1</span>
                     </div>
 
-                    <!-- Other -->
+
                     <div class="bartender__ingredient" draggable="true" data-type="sugar">
                         <img src="./icons/sugar.svg" alt="Sugar" class="bartender__ingredient-icon">
                         <span class="bartender__ingredient-name">Sugar</span>
@@ -237,7 +229,7 @@
                     </div>
                 </div>
 
-                <!-- Game Controls -->
+
                 <div class="bartender__game-controls">
                     <button id="btn-start" class="bartender__btn bartender__btn--start">🎮 Start Level</button>
                     <button id="btn-check" class="bartender__btn bartender__btn--check">✅ Check</button>
@@ -250,7 +242,7 @@
                 </div>
             </section>
 
-            <!-- Stats Panel -->
+
             <section class="bartender__stats-panel">
                 <h2 class="bartender__stats-title">📊 Game Stats</h2>
 
@@ -299,7 +291,6 @@
             </section>
         </main>
 
-        <!-- Footer -->
         <footer class="bartender__footer">
             <nav class="bartender__footer-nav">
                 <a href="./instructions.html" class="bartender__nav-link" target="_blank">📘 Game Instructions</a>
@@ -313,17 +304,13 @@
         </footer>
     </div>
 
-    <!-- Floating Glass (будет появляться при скролле) -->
-    <div class="bartender__floating-glass" id="floating-glass">
-        <div class="bartender__floating-glass-content" id="floating-glass-content"></div>
-    </div>
 
 
-    <script defer src="modalManager.js"></script>
-    <script defer src="touchDragManager.js"></script>
-    <script defer src="bartenderGame.js"></script>
-    <script defer src="pwaManager.js"></script>
-    <script defer src="main.js"></script>
+    <script defer src="./modalManager.js"></script>
+    <script defer src="./touchDragManager.js"></script>
+    <script defer src="./bartenderGame.js"></script>
+    <script defer src="./pwaManager.js"></script>
+    <script defer src="./main.js"></script>
 </body>
 
 </html>

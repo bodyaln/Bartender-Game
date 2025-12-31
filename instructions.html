@@ -6,16 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📘 Game Instructions - Bartender Game</title>
 
-    <!-- Styles -->
     <link rel="stylesheet" href="./style.css">
 
-    <!-- Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap"
         rel="stylesheet">
 
     <style>
-        /* Додаткові стилі для сторінки інструкцій */
         .instructions-container {
             max-width: 1000px;
             margin: 0 auto;
@@ -87,7 +84,7 @@
             display: none;
         }
 
-        /* Стилі для друку */
+
         @media print {
 
             .header,
@@ -143,20 +140,19 @@
 </head>
 
 <body>
-    <!-- Контейнер для інструкцій -->
+
     <div class="container instructions-container">
 
-        <!-- Заголовок -->
         <header class="instructions-header">
             <h1>📘 Bartender Game - Complete Instructions</h1>
             <p class="subtitle">Learn how to play, master controls, and become a virtual bartender!</p>
             <a href="./index.html" class="back-to-game">← Back to Game</a>
         </header>
 
-        <!-- Основний вміст -->
+
         <main class="instructions-content">
 
-            <!-- Секція 1: Про гру -->
+
             <section class="instruction-section">
                 <h2>🎮 About the Game</h2>
                 <p><strong>Bartender Game</strong> is a drag-and-drop cocktail mixing simulator developed as a
@@ -181,7 +177,7 @@
                 </div>
             </section>
 
-            <!-- Секція 2: Як грати -->
+
             <section class="instruction-section">
                 <h2>🎮 How to Play</h2>
 
@@ -199,7 +195,7 @@
                 </ol>
             </section>
 
-            <!-- Секція 4: Рівні -->
+
             <section class="instruction-section">
                 <h3>Difficulty Features:</h3>
                 <ul>
@@ -209,10 +205,6 @@
                     <li><strong>Expert:</strong> All features, strict timing</li>
                 </ul>
             </section>
-
-
-
-            <!-- Секція 6: Для друку -->
             <div class="print-only">
                 <hr>
                 <p><strong>Bartender Game</strong> - Final Project for Web Technologies</p>
@@ -224,12 +216,8 @@
         </main>
     </div>
 
-    <!-- Скрипт для дати друку -->
     <script>
-        // Автоматична дата для друку
         document.getElementById('print-date').textContent = new Date().toLocaleDateString('sk-SK');
-
-        // Відкриття/закриття друку
         window.addEventListener('beforeprint', () => {
             document.title = "Bartender Game - Instructions";
         });

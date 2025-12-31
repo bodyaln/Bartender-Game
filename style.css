@@ -1,1019 +1,895 @@
-/* ===== БАЗОВІ СТИЛІ ТА ЗМІННІ ===== */
 :root {
-    /* Кольори */
-    --primary: #1a1a2e;
-    --secondary: #16213e;
-    --accent: #00adb5;
-    --accent-light: #00ff95;
-    --text: #ffffff;
-    --text-light: #aaaaaa;
-    --panel-bg: rgba(255, 255, 255, 0.08);
-    --panel-border: rgba(255, 255, 255, 0.1);
-    
-    /* Статусні кольори */
-    --success: #4CAF50;
-    --warning: #FF9800;
-    --error: #F44336;
-    --info: #2196F3;
-    
-    /* Тіні */
-    --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    --shadow-hover: 0 8px 30px rgba(0, 173, 181, 0.3);
-    
-    /* Бордер-радіуси */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    
-    /* Анімації */
-    --transition: all 0.3s ease;
+  --primary: #1a1a2e;
+  --secondary: #16213e;
+  --accent: #00adb5;
+  --accent-light: #00ff95;
+  --text: #ffffff;
+  --text-light: #aaaaaa;
+  --panel-bg: rgba(255, 255, 255, 0.08);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+  --info: #2196f3;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 8px 30px rgba(0, 173, 181, 0.3);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --transition: all 0.3s ease;
 }
 
-/* ===== RESET ===== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Roboto', 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: var(--text);
-    min-height: 100vh;
-    line-height: 1.6;
-    overflow-x: hidden;
+  font-family: "Roboto", "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* ===== ОСНОВНІ СТИЛІ БАРТЕНДЕРА ===== */
 .bartender {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ===== HEADER ===== */
 .bartender__header {
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: var(--radius-lg);
-    border: 2px solid var(--accent);
-    box-shadow: var(--shadow);
-    padding: 10px;
-    margin-bottom: 20px;
-    text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--accent);
+  box-shadow: var(--shadow);
+  padding: 10px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .bartender__title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.2rem;
-    color: var(--accent);
+  font-family: "Poppins", sans-serif;
+  font-size: 2.2rem;
+  color: var(--accent);
 }
 
 .bartender__logo {
-    background: linear-gradient(45deg, #6366f1, #8b5cf6, #06b6d4, #10b981, #f59e0b);
-    background-size: 400% 400%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: rainbow 8s ease-in-out infinite;
-    display: inline-block;
+  background: linear-gradient(
+    45deg,
+    #6366f1,
+    #8b5cf6,
+    #06b6d4,
+    #10b981,
+    #f59e0b
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow 8s ease-in-out infinite;
+  display: inline-block;
 }
 
 @keyframes rainbow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-/* ===== MAIN CONTENT ===== */
 .bartender__main {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    flex: 1;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  margin-bottom: 20px;
 }
 
-/* ===== GAME PANEL ===== */
 .bartender__game-panel {
-    background: var(--panel-bg);
-    border-radius: var(--radius-lg);
-    padding: 25px;
-    border: 1px solid var(--panel-border);
-    display: flex;
-    flex-direction: column;
+  background: var(--panel-bg);
+  border-radius: var(--radius-lg);
+  padding: 25px;
+  border: 1px solid var(--panel-border);
+  display: flex;
+  flex-direction: column;
 }
 
 .bartender__game-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-    gap: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .bartender__cocktail-title {
-    color: var(--accent);
-    font-size: 1.8rem;
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  color: var(--accent);
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .bartender__difficulty {
-    background: var(--success);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: normal;
+  background: var(--success);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: normal;
 }
 
 .bartender__game-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .bartender__timer-info,
 .bartender__best-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 8px 15px;
-    border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 15px;
+  border-radius: var(--radius-md);
 }
 
 .bartender__timer-label,
 .bartender__best-label {
-    color: var(--text-light);
-    font-size: 0.9rem;
+  color: var(--text-light);
+  font-size: 0.9rem;
 }
 
 .bartender__timer-value,
 .bartender__best-value {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: var(--text);
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--text);
 }
 
-/* ===== MODAL WINDOW ===== */
 .bartender__modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
 .bartender__modal-content {
-    background: var(--secondary);
-    border-radius: var(--radius-lg);
-    padding: 30px;
-    max-width: 500px;
-    width: 100%;
-    border: 2px solid var(--accent);
-    position: relative;
-    max-height: 80vh;
-    overflow-y: auto;
+  background: var(--secondary);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  border: 2px solid var(--accent);
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .bartender__modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid rgba(0, 173, 181, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(0, 173, 181, 0.3);
 }
 
 .bartender__modal-header h3 {
-    color: var(--accent);
-    font-size: 1.4rem;
+  color: var(--accent);
+  font-size: 1.4rem;
 }
 
 .bartender__modal-close {
-    background: none;
-    border: none;
-    color: var(--text);
-    font-size: 2rem;
-    cursor: pointer;
-    transition: var(--transition);
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
 .bartender__modal-close:hover {
-    color: var(--accent);
+  color: var(--accent);
 }
 
-.bartender__modal-actions{
-    display: flex;
-    margin: 10px;
-    gap: 10px;
+.bartender__modal-actions {
+  display: flex;
+  margin: 10px;
+  gap: 10px;
 }
 .bartender__modal-body p {
-    margin: 20px;
+  margin: 20px;
 }
 
 .bartender__recipe-list {
-    list-style: none;
-    padding-left: 0;
-    margin-bottom: 20px;
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 20px;
 }
 
 .bartender__recipe-step {
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-    padding-left: 30px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  padding-left: 30px;
 }
 
 .bartender__recipe-step:before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-weight: bold;
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
 }
 
 .bartender__recipe-step--stir {
-    background: rgba(0, 173, 181, 0.1);
-    border-radius: var(--radius-sm);
-    padding: 15px;
-    margin-top: 10px;
+  background: rgba(0, 173, 181, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 15px;
+  margin-top: 10px;
 }
 
 .bartender__stir-instruction {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .bartender__stir-emoji {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .bartender__stir-text {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .bartender__time-limit {
-    background: rgba(255, 152, 0, 0.1);
-    padding: 15px;
-    border-radius: var(--radius-md);
-    text-align: center;
-    color: var(--warning);
-    font-weight: bold;
+  background: rgba(255, 152, 0, 0.1);
+  padding: 15px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  color: var(--warning);
+  font-weight: bold;
 }
 
-/* ===== INGREDIENTS GROUPS ===== */
 .bartender__ingredients-group {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 15px;
-    margin: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
 }
 
-/* Стили для ингредиентов */
 .bartender__ingredient {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md);
-    text-align: center;
-    cursor: grab;
-    transition: var(--transition);
-    border: 2px dashed var(--accent);
-    user-select: none;
-    position: relative;
-    padding: 15px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  text-align: center;
+  cursor: grab;
+  transition: var(--transition);
+  border: 2px dashed var(--accent);
+  user-select: none;
+  position: relative;
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
 }
 
 .bartender__ingredient:hover {
-    background: rgba(0, 173, 181, 0.15);
-    transform: translateY(-3px);
-    border-style: solid;
-    box-shadow: var(--shadow-hover);
+  background: rgba(0, 173, 181, 0.15);
+  transform: translateY(-3px);
+  border-style: solid;
+  box-shadow: var(--shadow-hover);
 }
 
 .bartender__ingredient:active {
-    cursor: grabbing;
-    transform: scale(0.95);
+  cursor: grabbing;
+  transform: scale(0.95);
 }
 
 .bartender__ingredient--flipped {
-    transform: rotate(180deg);
-    border-color: var(--warning);
+  transform: rotate(180deg);
+  border-color: var(--warning);
 }
 
 .bartender__ingredient-icon {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 10px;
-    object-fit: contain;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+  object-fit: contain;
 }
 
 .bartender__ingredient-name {
-    display: block;
-    font-weight: bold;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
+  display: block;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
 }
 
 .bartender__ingredient-quantity {
-    display: block;
-    color: var(--text-light);
-    font-size: 0.8rem;
+  display: block;
+  color: var(--text-light);
+  font-size: 0.8rem;
 }
 
-/* ===== GLASS AREA ===== */
 .bartender__glass-area {
-    margin: 30px 0;
-    text-align: center;
-    position: relative;
-    z-index: 1;
+  margin: 30px 0;
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
-
 
 .bartender__glass {
-    width: 180px;
-    height: 250px;
-    border: 3px solid var(--accent);
-    border-radius: 10px 10px 50px 50px;
-    background: rgba(255, 255, 255, 0.05);
-    position: relative;
-    overflow: hidden;
-    margin: 0 auto;
-    transition: var(--transition);
+  width: 180px;
+  height: 250px;
+  border: 3px solid var(--accent);
+  border-radius: 10px 10px 50px 50px;
+  background: rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  transition: var(--transition);
 }
 
 .bartender__glass--drop-ready {
-    border-color: var(--accent-light);
-    box-shadow: 0 0 20px rgba(0, 255, 149, 0.5);
+  border-color: var(--accent-light);
+  box-shadow: 0 0 20px rgba(0, 255, 149, 0.5);
 }
 
 .bartender__glass--stirring {
-    animation: stirGlass 0.8s ease-in-out;
+  animation: stirGlass 0.8s ease-in-out;
 }
 
 .bartender__glass-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    border-radius: 10px 10px 50px 50px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 10px 10px 50px 50px;
 }
 
-/* ===== INGREDIENTS IN GLASS ===== */
 .bartender__glass-ingredient {
-    position: absolute;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    padding: 10px 6px;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: bold;
-    text-align: center;
-    width: 55px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-    z-index: 1;
-    pointer-events: none;
-    user-select: none;
-    word-break: break-word;
-    animation: popIn 0.5s ease;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 10px 6px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-align: center;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  word-break: break-word;
+  animation: popIn 0.5s ease;
 }
 
 @keyframes popIn {
-    0% { transform: scale(0); opacity: 0; }
-    70% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes stirGlass {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(15deg); }
-    50% { transform: rotate(0deg); }
-    75% { transform: rotate(-15deg); }
-    100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(15deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-15deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 .bartender__glass-ingredient--flipped {
-    border-color: var(--warning);
-    position: relative;
+  border-color: var(--warning);
+  position: relative;
 }
 
 .bartender__flip-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 10px;
-    height: 10px;
-    background: var(--warning);
-    border-radius: 50%;
-    border: 2px solid var(--primary);
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 10px;
+  height: 10px;
+  background: var(--warning);
+  border-radius: 50%;
+  border: 2px solid var(--primary);
 }
 
-/* ===== FLOATING GLASS ===== */
-.bartender__floating-glass {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
-    height: 200px;
-    border: 3px solid var(--accent);
-    border-radius: 10px 10px 50px 50px;
-    background: rgba(255, 255, 255, 0.05);
-    overflow: hidden;
-    z-index: 1000;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
-.bartender__floating-glass--visible {
-    display: block;
-    opacity: 1;
-    animation: floatIn 0.5s ease-out forwards;
-}
-
-.bartender__floating-glass-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    border-radius: 10px 10px 50px 50px;
-}
-
-/* INGREDIENTS IN FLOATING GLASS */
-.bartender__floating-ingredient {
-    position: absolute;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    padding: 8px 4px;
-    color: white;
-    font-size: 0.6rem;
-    font-weight: bold;
-    text-align: center;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    z-index: 1;
-    pointer-events: none;
-    user-select: none;
-    word-break: break-word;
-    animation: popIn 0.3s ease;
-}
-
-/* Стили для плавающего стакана при перетаскивании */
-.bartender__floating-glass--drop-ready {
-    border-color: var(--accent-light);
-    box-shadow: 0 0 25px rgba(0, 255, 149, 0.6);
-}
-
-/* Анимация перемешивания для плавающего стакана */
-.bartender__floating-glass--stirring {
-    animation: stirGlass 0.8s ease-in-out;
-}
-
-/* Анимация появления плавающего стакана */
-@keyframes floatIn {
-    0% {
-        transform: translateX(-50%) translateY(100px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Класс, когда ингредиенты видны */
-.bartender__ingredients-visible .bartender__glass-container {
-    opacity: 0.7;
-}
-
-/* Класс, когда ингредиенты не видны */
-.bartender__ingredients-hidden .bartender__floating-glass {
-    opacity: 1;
-}
-
-/* ===== GAME CONTROLS ===== */
 .bartender__game-controls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 30px;
 }
 
-/* ===== BUTTONS ===== */
 .bartender__btn {
-    padding: 12px 20px;
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-width: 140px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 140px;
 }
 
 .bartender__btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .bartender__btn:disabled {
-    background: #666;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-    opacity: 0.6;
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
 }
 
 /* Button Colors */
-.bartender__btn--recipe { 
-    background: var(--info); 
-    color: white; 
+.bartender__btn--recipe {
+  background: var(--info);
+  color: white;
 }
 
-.bartender__btn--start { 
-    background: var(--accent); 
-    color: white; 
+.bartender__btn--start {
+  background: var(--accent);
+  color: white;
 }
 
-.bartender__btn--check { 
-    background: var(--success); 
-    color: white; 
+.bartender__btn--check {
+  background: var(--success);
+  color: white;
 }
 
-.bartender__btn--reset { 
-    background: var(--error); 
-    color: white; 
+.bartender__btn--reset {
+  background: var(--error);
+  color: white;
 }
 
-.bartender__btn--stir { 
-    background: #9C27B0; 
-    color: white; 
+.bartender__btn--stir {
+  background: #9c27b0;
+  color: white;
 }
 
-
-.bartender__btn--next { 
-    background: var(--info); 
-    color: white; 
+.bartender__btn--next {
+  background: var(--info);
+  color: white;
 }
 
-.bartender__btn--install { 
-    background: var(--success); 
-    color: white; 
-    margin-top: 10px;
+.bartender__btn--install {
+  background: var(--success);
+  color: white;
+  margin-top: 10px;
 }
 
-/* ===== STATS PANEL ===== */
 .bartender__stats-panel {
-    background: var(--panel-bg);
-    border-radius: var(--radius-lg);
-    padding: 25px;
-    border: 1px solid var(--panel-border);
-    margin-top: 20px;
+  background: var(--panel-bg);
+  border-radius: var(--radius-lg);
+  padding: 25px;
+  border: 1px solid var(--panel-border);
+  margin-top: 20px;
 }
 
 .bartender__stats-title {
-    color: var(--accent);
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid rgba(0, 173, 181, 0.3);
-    font-size: 1.8rem;
+  color: var(--accent);
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(0, 173, 181, 0.3);
+  font-size: 1.8rem;
 }
 
 .bartender__stats-section {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .bartender__stats-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
+  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .bartender__levels {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 10px;
-    margin: 15px 0;
-    padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
+  margin: 15px 0;
+  padding: 20px;
 }
 
 .bartender__level {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 0 auto;
-    transition: var(--transition);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 auto;
+  transition: var(--transition);
 }
 
 .bartender__level--completed {
-    background: var(--success);
-    color: white;
+  background: var(--success);
+  color: white;
 }
 
 .bartender__level--current {
-    background: var(--info);
-    color: white;
-    transform: scale(1.1);
+  background: var(--info);
+  color: white;
+  transform: scale(1.1);
 }
 
 .bartender__levels-text {
-    text-align: center;
-    color: var(--text-light);
-    margin-top: 10px;
+  text-align: center;
+  color: var(--text-light);
+  margin-top: 10px;
 }
 
 .bartender__stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
 }
 
 .bartender__stat-box {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius-md);
-    padding: 15px;
-    text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: 15px;
+  text-align: center;
 }
 
 .bartender__stat-number {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--accent);
-    margin-bottom: 5px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 5px;
 }
 
 .bartender__stat-label {
-    font-size: 0.8rem;
-    color: var(--text-light);
+  font-size: 0.8rem;
+  color: var(--text-light);
 }
 
 .bartender__controls-guide {
-    list-style: none;
-    padding-left: 0;
+  list-style: none;
+  padding-left: 0;
 }
 
 .bartender__controls-guide li {
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 0.9rem;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.9rem;
 }
 
-
 .bartender__pwa-status {
-    background: rgba(255, 152, 0, 0.2);
-    color: var(--warning);
-    padding: 10px 15px;
-    border-radius: var(--radius-md);
-    text-align: center;
-    font-weight: bold;
-    cursor: pointer;
-    margin-bottom: 10px;
-    transition: var(--transition);
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--warning);
+  padding: 10px 15px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: var(--transition);
 }
 
 .bartender__pwa-status:hover {
-    background: rgba(255, 152, 0, 0.3);
+  background: rgba(255, 152, 0, 0.3);
 }
 
 .bartender__pwa-info {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  text-align: center;
 }
 
-/* ===== FOOTER ===== */
 .bartender__footer {
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: var(--radius-lg);
-    padding: 25px;
-    border: 2px solid var(--accent);
-    margin-top: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius-lg);
+  padding: 25px;
+  border: 2px solid var(--accent);
+  margin-top: 20px;
 }
 
 .bartender__footer-nav {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .bartender__nav-link {
-    background: rgba(0, 173, 181, 0.2);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 10px 20px;
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    font-weight: bold;
-    transition: var(--transition);
+  background: rgba(0, 173, 181, 0.2);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: bold;
+  transition: var(--transition);
 }
 
 .bartender__nav-link:hover {
-    background: rgba(0, 173, 181, 0.4);
+  background: rgba(0, 173, 181, 0.4);
 }
 
 .bartender__footer-info {
-    text-align: center;
-    color: var(--text-light);
+  text-align: center;
+  color: var(--text-light);
 }
 
 .bartender__course-info {
-    font-weight: bold;
-    color: var(--accent);
-    margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 5px;
 }
 
 .bartender__team-info {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .bartender__validation {
-    font-size: 0.9rem;
-    opacity: 0.8;
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
-/* ===== АДАПТИВНІСТЬ ===== */
 @media (max-width: 1200px) {
-    .bartender {
-        padding: 15px;
-    }
-    
-    .bartender__game-header {
-       
-        align-items: flex-start;
-    }
-    
-    .bartender__game-info {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .bartender__ingredients-group {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
+  .bartender {
+    padding: 15px;
+  }
+
+  .bartender__game-header {
+    align-items: flex-start;
+  }
+
+  .bartender__game-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .bartender__ingredients-group {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-    .bartender__title {
-        font-size: 1.8rem;
-    }
-    
-    
-    
-    .bartender__game-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        position: relative;
-    }
-    
-    
-    
-    .bartender__ingredients-group {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-        gap: 10px;
-    }
-    
-    .bartender__ingredient {
-        padding: 10px 5px;
-        min-height: 90px;
-    }
-    
-    .bartender__ingredient-icon {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .bartender__glass {
-        width: 150px;
-        height: 200px;
-    }
-    
-    .bartender__floating-glass {
-        width: 120px;
-        height: 160px;
-        bottom: 15px;
-    }
-    
-    .bartender__floating-ingredient {
-        width: 35px;
-        height: 35px;
-        font-size: 0.55rem;
-        padding: 6px 3px;
-    }
-    
-    .bartender__game-controls {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .bartender__btn {
-        width: 100%;
-    }
-    
-    .bartender__stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .bartender__levels {
-        grid-template-columns: repeat(4, 1fr);
-    }
+  .bartender__title {
+    font-size: 1.8rem;
+  }
 
+  .bartender__game-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    position: relative;
+  }
 
-.bartender__btn--recipe {
-        position: fixed;
-        top: 70px;
-        left: 10px;
-        z-index: 1000;
-        min-width: 30px;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        gap: 0px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        background: var(--accent);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Скрываем текст "Recipe" на мобильных */
-    .bartender__btn--recipe::after {
-        content: "📝";
-    }
-    
-    .bartender__btn--recipe span {
-         font-size: 0;
-    }
-    
-    /* Таймер - только иконка и время */
-    .bartender__timer-info {
-        position: fixed;
-        top: 20px;
-        left: 10px;
-        z-index: 1000;
-        background: rgba(0, 173, 181, 0.9);
-        border-radius: 30px;
-        padding: 5px 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        min-width: auto;
-    }
-    .bartender__timer-info ::before {
+  .bartender__ingredients-group {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+  }
+
+  .bartender__ingredient {
+    padding: 10px 5px;
+    min-height: 90px;
+  }
+
+  .bartender__ingredient-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .bartender__glass {
+    width: 150px;
+    height: 200px;
+  }
+
+  .bartender__floating-ingredient {
+    width: 35px;
+    height: 35px;
+    font-size: 0.55rem;
+    padding: 6px 3px;
+  }
+
+  .bartender__game-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bartender__btn {
+    width: 100%;
+  }
+
+  .bartender__stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bartender__levels {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .bartender__btn--recipe {
+    position: fixed;
+    top: 70px;
+    left: 10px;
+    z-index: 1000;
+    min-width: 30px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    gap: 0px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: var(--accent);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .bartender__btn--recipe::after {
+    content: "📝";
+  }
+
+  .bartender__btn--recipe span {
+    font-size: 0;
+  }
+
+  .bartender__timer-info {
+    position: fixed;
+    top: 20px;
+    left: 10px;
+    z-index: 1000;
+    background: rgba(0, 173, 181, 0.9);
+    border-radius: 30px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    min-width: auto;
+  }
+  .bartender__timer-info ::before {
     content: "⏱️ ";
-    }
-    /* Скрываем текст "Time:" на мобильных */
-    .bartender__timer-label {
-        display: none;
-    }
-    
-    .bartender__timer-value {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: white;
-    }
-    
-   .bartender__best-info{
-        width: 100%;
-   }
+  }
 
+  .bartender__timer-label {
+    display: none;
+  }
+
+  .bartender__timer-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+  }
+
+  .bartender__best-info {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
-    .bartender {
-        padding: 10px;
-    }
-    .bartender__title{
-        font-size: calc(0.9rem + 1vw);
-        
-    }
-    
-    .bartender__game-panel,
-    .bartender__stats-panel,
-    .bartender__footer {
-        padding: 15px;
-    }
-    
-    .bartender__ingredients-group {
-        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-        gap: 8px;
-    }
-    
-    .bartender__ingredient {
-        padding: 1px 0px;
-        min-height: 30px;
-    }
-    
-    .bartender__ingredient-icon {
-        width: 25px;
-        height: 25px;
-        margin-bottom: 5px;
-    }
-    
-    .bartender__ingredient-name {
-        font-size: 0.8rem;
-    }
-    
-    .bartender__ingredient-quantity {
-        font-size: 0.7rem;
-    }
-    
-    .bartender__glass {
-        width: 120px;
-        height: 160px;
-    }
-    
-    .bartender__floating-glass {
-        width: 100px;
-        height: 140px;
-        bottom: 10px;
-    }
-    
-    .bartender__floating-ingredient {
-        width: 30px;
-        height: 30px;
-        font-size: 0.5rem;
-        padding: 5px 2px;
-    }
-    
-    .bartender__stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .bartender__levels {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .bartender__level {
-        width: 35px;
-        height: 35px;
-        font-size: 0.9rem;
-    }
+  .bartender {
+    padding: 10px;
+  }
+  .bartender__title {
+    font-size: calc(0.9rem + 1vw);
+  }
 
-   
-    
+  .bartender__game-panel,
+  .bartender__stats-panel,
+  .bartender__footer {
+    padding: 15px;
+  }
+
+  .bartender__ingredients-group {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 8px;
+  }
+
+  .bartender__ingredient {
+    padding: 1px 0px;
+    min-height: 30px;
+  }
+
+  .bartender__ingredient-icon {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 5px;
+  }
+
+  .bartender__ingredient-name {
+    font-size: 0.8rem;
+  }
+
+  .bartender__ingredient-quantity {
+    font-size: 0.7rem;
+  }
+
+  .bartender__glass {
+    width: 120px;
+    height: 160px;
+  }
+
+  .bartender__floating-ingredient {
+    width: 30px;
+    height: 30px;
+    font-size: 0.5rem;
+    padding: 5px 2px;
+  }
+
+  .bartender__stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bartender__levels {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .bartender__level {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
 }
 
-/* ===== УТИЛІТИ ===== */
-.text-center { text-align: center; }
-.mt-1 { margin-top: 10px; }
-.mb-1 { margin-bottom: 10px; }
-.mt-2 { margin-top: 20px; }
-.mb-2 { margin-bottom: 20px; }
-
-/* ===== OFFLINE INDICATOR ===== */
 body.offline::before {
   content: "📴 OFFLINE MODE";
   position: fixed;
@@ -1027,20 +903,30 @@ body.offline::before {
   font-weight: bold;
   z-index: 1000;
   animation: pulse 2s infinite;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
-/* ===== PWA INSTALL BUTTON ANIMATION ===== */
 @keyframes install-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 87, 34, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+  }
 }
 
 .bartender__btn--install {

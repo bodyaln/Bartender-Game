@@ -1,7 +1,5 @@
 class BartenderGame {
   constructor() {
-    console.log("🍸 Bartender Game - Complete with Statistics");
-
     this.modal = new ModalManager();
     this.ingredients = document.querySelectorAll(".bartender__ingredient");
     this.glass = document.getElementById("target-glass");
@@ -54,8 +52,6 @@ class BartenderGame {
   }
 
   async init() {
-    console.log("Initializing game...");
-
     await this.loadCocktails();
     this.totalLevels = this.cocktails.length;
 
@@ -72,10 +68,6 @@ class BartenderGame {
 
     this.loadLevel(this.currentLevel);
     this.updateLevelStatistics();
-
-    console.log(
-      `✅ Game ready! Level: ${this.currentLevel}/${this.totalLevels}`
-    );
   }
 
   setupModal() {
@@ -258,7 +250,6 @@ class BartenderGame {
       const response = await fetch("./cocktails.json");
       const data = await response.json();
       this.cocktails = data.cocktails;
-      console.log(`Loaded ${this.cocktails.length} cocktails`);
     } catch (error) {
       console.error("Error loading cocktails:", error);
       this.loadFallbackCocktails();
@@ -269,22 +260,18 @@ class BartenderGame {
     const levelsContainer = document.querySelector(".bartender__levels");
     if (!levelsContainer) return;
 
-    // Сохраняем исходное содержимое контейнера
     const originalContent = levelsContainer.innerHTML;
 
-    // Создаем заглушку на время загрузки
     levelsContainer.innerHTML = `
         <div class="bartender__level-placeholder">
             <span>Loading levels...</span>
         </div>
     `;
 
-    // Когда коктейли будут загружены, обновим прогресс
     setTimeout(() => {
       if (this.totalLevels > 0) {
         this.updateLevelProgress();
       } else {
-        // Если не удалось загрузить коктейли, возвращаем исходное содержимое
         levelsContainer.innerHTML = originalContent;
       }
     }, 300);
@@ -348,7 +335,6 @@ class BartenderGame {
 
     this.resetLevelState();
     this.saveGameState();
-    console.log(`📈 Level ${levelNumber} loaded: ${this.currentCocktail.name}`);
   }
 
   resetLevelState() {
@@ -505,17 +491,13 @@ class BartenderGame {
     );
 
     if (confirmed) {
-      // Пользователь хочет попробовать снова немедленно
       this.resetLevelState();
     } else {
-      // Пользователь хочет сначала посмотреть что сделал неправильно
-      // Сбрасываем только состояние игры, но оставляем содержимое стакана для просмотра
       this.levelStarted = false;
       this.isTimerRunning = false;
       this.isGamePaused = false;
 
-      this.updateStartButton(); // Это важно - обновит текст кнопки на "🎮 Start Level"
-      console.log("⏰ Time out - game state reset for restart option");
+      this.updateStartButton();
     }
   }
 
@@ -529,19 +511,15 @@ class BartenderGame {
       this.startBtn.disabled = false;
       this.startBtn.innerHTML = "🏃‍♂️ Continue Game";
     } else if (this.isLevelResetForReplay) {
-      // Уровень сброшен для повторного прохождения
       this.startBtn.disabled = false;
       this.startBtn.innerHTML = "🎮 Start Level";
     } else if (this.isGameCompleted) {
-      // Игра полностью завершена и пользователь хочет посмотреть статистику
       this.startBtn.disabled = false;
       this.startBtn.innerHTML = "🔄 Reset Game";
     } else if (this.completedLevels.includes(this.currentLevel)) {
-      // Уровень пройден и не сброшен
       this.startBtn.disabled = false;
       this.startBtn.innerHTML = "🔄 Reset Level";
     } else {
-      // Обычный непройденный уровень
       this.startBtn.disabled = false;
       this.startBtn.innerHTML = "🎮 Start Level";
     }
@@ -830,9 +808,6 @@ class BartenderGame {
     this.stopTimer();
     this.levelStarted = false;
 
-    console.log(
-      `🎉 Level ${this.currentLevel} completed in ${this.timeElapsed}s!`
-    );
     this.recordLevelCompletion(this.timeElapsed);
     this.updateLevelProgress();
     this.updateNextButton();
@@ -859,9 +834,8 @@ class BartenderGame {
       await this.modal.showMessage("Level Completed!", message);
       this.updateStartButton();
     } else {
-      // Последний уровень завершен
       await this.modal.showMessage("🎉 ALL LEVELS COMPLETED!", message);
-      // Показываем варианты после небольшой задержки
+
       setTimeout(() => {
         this.showCompletionOptions();
       }, 1000);
@@ -934,7 +908,6 @@ class BartenderGame {
   }
 
   async resetCompletedLevelForReplay() {
-    // Сбрасываем состояние, но оставляем уровень в пройденных
     this.resetGlass();
     this.stirCount = 0;
     this.isStirring = false;
@@ -945,17 +918,13 @@ class BartenderGame {
     this.timeElapsed = 0;
     this.levelStarted = false;
 
-    // Устанавливаем флаг, что уровень сброшен для повторного прохождения
     this.isLevelResetForReplay = true;
 
-    // ВАЖНО: не удаляем уровень из completedLevels!
-
-    // Обновляем UI
     this.updateTimerDisplay();
     this.updateRecipeList();
     this.updateLevelProgress();
     this.updateNextButton();
-    this.updateStartButton(); // Это установит кнопку как "🎮 Start Level"
+    this.updateStartButton();
 
     await this.modal.showMessage(
       "Level Reset",
@@ -977,14 +946,13 @@ class BartenderGame {
             }
             return;
           }
-          // Если уровень сброшен для повторного прохождения
+
           if (this.isLevelResetForReplay) {
             await this.startLevel();
-            this.isLevelResetForReplay = false; // Сбрасываем флаг после старта
+            this.isLevelResetForReplay = false;
             return;
           }
 
-          // Если уровень уже пройден и нажата кнопка "Reset Level"
           if (this.completedLevels.includes(this.currentLevel)) {
             const confirmed = await this.modal.showConfirm(
               "Reset Level",
@@ -994,7 +962,6 @@ class BartenderGame {
               await this.resetCompletedLevelForReplay();
             }
           } else {
-            // Если уровень не пройден, начинаем его
             await this.startLevel();
           }
         } else if (this.levelStarted && this.isTimerRunning) {
@@ -1066,10 +1033,6 @@ class BartenderGame {
       this.currentLevel
     );
 
-    // Активируем кнопку Previous только если:
-    // 1. Это не первый уровень
-    // 2. Предыдущий уровень пройден
-    // 3. Текущий уровень пройден
     if (!isFirstLevel && isPreviousLevelCompleted && isCurrentLevelCompleted) {
       this.previousBtn.disabled = false;
     } else {
@@ -1105,10 +1068,6 @@ class BartenderGame {
 
   updateProgress() {
     if (!this.currentCocktail) return;
-
-    const target = this.currentCocktail.ingredients.length;
-    const current = this.addedIngredients.length;
-    console.log(`Progress: ${current}/${target}`);
   }
 
   updateRecipeList() {
@@ -1157,17 +1116,14 @@ class BartenderGame {
       return;
     }
 
-    // Очищаем контейнер уровней
     levelsContainer.innerHTML = "";
 
-    // Создаем элементы уровней динамически
     for (let i = 1; i <= this.totalLevels; i++) {
       const levelElement = document.createElement("div");
       levelElement.className = "bartender__level";
       levelElement.textContent = i;
       levelElement.dataset.level = i;
 
-      // Добавляем классы в зависимости от статуса уровня
       if (this.completedLevels.includes(i)) {
         levelElement.classList.add("bartender__level--completed");
       }
@@ -1176,7 +1132,6 @@ class BartenderGame {
         levelElement.classList.add("bartender__level--current");
       }
 
-      // Добавляем визуальную обратную связь при наведении
       levelElement.addEventListener("mouseenter", () => {
         const stats = this.levelStats[i] || {};
         let tooltipText = `Level ${i}: `;
@@ -1186,18 +1141,13 @@ class BartenderGame {
         } else {
           tooltipText += "Not completed yet";
         }
-
-        // Показываем подсказку в консоли или можно создать визуальную подсказку
-        console.log(tooltipText);
       });
 
       levelsContainer.appendChild(levelElement);
     }
 
-    // Обновляем счетчик пройденных уровней
     completedCountElement.textContent = this.completedLevels.length;
 
-    // Обновляем текст с общим количеством уровней
     levelsTextElement.innerHTML = `Completed: <span id="completed-levels">${this.completedLevels.length}</span>/${this.totalLevels}`;
     this.updateNextButton();
     this.updatePreviousButton();
@@ -1222,24 +1172,19 @@ class BartenderGame {
   }
 
   async startLevel() {
-    // Если уровень уже пройден, но мы сбрасываем для повторного прохождения
     if (
       this.completedLevels.includes(this.currentLevel) &&
       this.isLevelResetForReplay
     ) {
       this.resetLevelState();
       this.isLevelResetForReplay = false;
-    }
-    // Если уровень уже пройден и не сброшен для повторного прохождения
-    else if (this.completedLevels.includes(this.currentLevel)) {
+    } else if (this.completedLevels.includes(this.currentLevel)) {
       await this.modal.showMessage(
         "Level Completed",
         "✅ This level is already completed!"
       );
       return;
-    }
-    // Если игра уже запущена
-    else if (this.levelStarted && this.isTimerRunning) {
+    } else if (this.levelStarted && this.isTimerRunning) {
       await this.modal.showMessage(
         "Game in Progress",
         "⚠️ Level already in progress!"
@@ -1247,14 +1192,12 @@ class BartenderGame {
       return;
     }
 
-    // ВАЖНО: Полностью сбрасываем стакан перед началом
     this.resetGlass();
     this.timeElapsed = 0;
     this.levelTime = this.currentCocktail.timeLimit || 60;
     this.startTimer();
     this.updateStartButton();
 
-    // Показываем сообщение только для первого прохождения или после сброса
     await this.modal.showMessage(
       "Level Started",
       `🎮 Level ${this.currentLevel} started!\nTime limit: ${this.levelTime} seconds`
@@ -1293,11 +1236,9 @@ class BartenderGame {
     }
 
     this.updateProgress();
-    console.log("✅ Glass reset");
   }
 
   async showCompletionOptions() {
-    // Не показываем опции, если это не последний уровень
     if (
       this.currentLevel < this.totalLevels ||
       !this.completedLevels.includes(this.currentLevel)
@@ -1330,7 +1271,6 @@ class BartenderGame {
     document.body.appendChild(modal);
     modal.style.display = "flex";
 
-    // Обработчики кнопок
     document.getElementById("btn-view-stats").addEventListener("click", () => {
       modal.remove();
       this.isGameCompleted = true;
@@ -1344,7 +1284,6 @@ class BartenderGame {
         this.restartGameCompletely();
       });
 
-    // Закрытие по клику вне модального окна
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         modal.remove();
@@ -1362,21 +1301,17 @@ class BartenderGame {
 
     if (!confirmed) return;
 
-    // Полный сброс статистики
     this.currentLevel = 1;
     this.completedLevels = [];
     this.levelStats = {};
     this.overallBestTime = null;
     this.isGameCompleted = false;
 
-    // Очистка localStorage
     localStorage.removeItem("bartenderGame");
 
-    // Перезагрузка уровней
     this.loadLevel(1);
     this.updateLevelStatistics();
 
-    // Сбрасываем текст кнопки Next после перезапуска
     if (this.nextBtn) {
       this.nextBtn.innerHTML = "Next →";
       this.nextBtn.disabled = true;

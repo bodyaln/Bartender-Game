@@ -17,14 +17,11 @@ class PWAManager {
   }
 
   setupEventListeners() {
-    // Обработка события beforeinstallprompt (Android и Chrome)
     window.addEventListener("beforeinstallprompt", (e) => {
-      console.log("[PWA] beforeinstallprompt event fired");
-      // Предотвращаем автоматическую установку
       e.preventDefault();
-      // Сохраняем событие для последующего использования
+
       this.deferredPrompt = e;
-      // Показываем кнопку установки
+
       if (this.installButton) {
         this.installButton.style.display = "block";
       }
@@ -33,38 +30,28 @@ class PWAManager {
       }
     });
 
-    // Обработка успешной установки приложения
     window.addEventListener("appinstalled", () => {
-      console.log("[PWA] App was installed");
       this.deferredPrompt = null;
       this.updateUI();
     });
 
-    // Обработка офлайн/онлайн статуса
     window.addEventListener("online", () => {
-      console.log("[PWA] Online mode");
       this.updateNetworkStatus(true);
     });
 
     window.addEventListener("offline", () => {
-      console.log("[PWA] Offline mode");
       this.updateNetworkStatus(false);
     });
 
-    // Обработка нажатия на кнопку установки
     if (this.installButton) {
       this.installButton.addEventListener("click", async () => {
         if (this.deferredPrompt) {
-          // Скрываем кнопку
           this.installButton.style.display = "none";
-          // Запускаем установку
+
           this.deferredPrompt.prompt();
-          // Ждем результат установки
-          const { outcome } = await this.deferredPrompt.userChoice;
-          console.log(`[PWA] User response to install prompt: ${outcome}`);
-          // Сбрасываем отложенное событие
+
           this.deferredPrompt = null;
-          // Обновляем интерфейс
+
           this.updateUI();
         }
       });
@@ -73,7 +60,6 @@ class PWAManager {
 
   updateUI() {
     if (this.isStandalone) {
-      // Приложение установлено, скрываем кнопки установки
       if (this.installButton) {
         this.installButton.style.display = "none";
       }
@@ -83,7 +69,6 @@ class PWAManager {
         this.pwaStatus.style.color = "#4CAF50";
       }
     } else {
-      // Приложение не установлено
       if (this.deferredPrompt && this.installButton) {
         this.installButton.style.display = "block";
       }
@@ -98,7 +83,6 @@ class PWAManager {
       }
     }
 
-    // Обновляем статус сети
     this.updateNetworkStatus(navigator.onLine);
   }
 
@@ -114,34 +98,20 @@ class PWAManager {
   registerServiceWorker() {
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("./sw.js")
-          .then((registration) => {
-            console.log(
-              "[PWA] ServiceWorker registered with scope:",
-              registration.scope
-            );
-
-            // Проверка на обновления приложения
-            registration.onupdatefound = () => {
-              const installingWorker = registration.installing;
-              installingWorker.onstatechange = () => {
-                if (installingWorker.state === "installed") {
-                  if (navigator.serviceWorker.controller) {
-                    console.log(
-                      "[PWA] New content is available; please refresh."
-                    );
-                    // Можно показать уведомление пользователю о доступном обновлении
-                  } else {
-                    console.log("[PWA] Content is cached for offline use.");
-                  }
+        navigator.serviceWorker.register("./sw.js").then((registration) => {
+          registration.onupdatefound = () => {
+            const installingWorker = registration.installing;
+            installingWorker.onstatechange = () => {
+              if (installingWorker.state === "installed") {
+                if (navigator.serviceWorker.controller) {
+                  console.log(
+                    "[PWA] New content is available; please refresh."
+                  );
                 }
-              };
+              }
             };
-          })
-          .catch((error) => {
-            console.error("[PWA] ServiceWorker registration failed:", error);
-          });
+          };
+        });
       });
     }
   }

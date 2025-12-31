@@ -16,8 +16,6 @@ class TouchDragManager {
   setupTouchEvents() {
     if (!this.isTouchDevice) return;
 
-    console.log("Setting up touch events for mobile devices...");
-
     this.game.ingredients.forEach((ingredient) => {
       ingredient.addEventListener(
         "touchstart",

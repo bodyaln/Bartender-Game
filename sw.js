@@ -2,7 +2,11 @@ const CACHE_NAME = "bartender-game-v1";
 const urlsToCache = [
   "/",
   "/index.html",
-  "/game.js",
+  "/modalManager.js",
+  "/touchDragManager.js",
+  "/bartenderGame.js",
+  "/pwaManager.js",
+  "/main.js",
   "/style.css",
   "/cocktails.json",
   "/instructions.html",
@@ -37,7 +41,6 @@ const urlsToCache = [
   "/icons/ice.svg",
 ];
 
-// Install event - кешируем ресурсы при установке
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
@@ -54,7 +57,6 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// Activate event - очищаем старый кеш
 self.addEventListener("activate", (event) => {
   const cacheWhitelist = [CACHE_NAME];
 
@@ -76,9 +78,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Fetch event - обрабатываем запросы, используя кеш
 self.addEventListener("fetch", (event) => {
-  // Игнорируем запросы к API и внешним ресурсам
   if (
     event.request.url.includes("://") &&
     !event.request.url.includes(self.location.origin)
@@ -88,7 +88,6 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith(
     caches.match(event.request).then((response) => {
-      // Если ресурс есть в кеше, возвращаем его
       if (response) {
         return response;
       }
@@ -105,10 +104,8 @@ self.addEventListener("fetch", (event) => {
             return response;
           }
 
-          // Клонируем ответ для кеширования
           const responseToCache = response.clone();
 
-          // Кешируем только GET запросы
           if (event.request.method === "GET") {
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(event.request, responseToCache);
@@ -118,18 +115,14 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => {
-          // Если нет интернета и ресурса нет в кеше
           if (event.request.mode === "navigate") {
-            // Для навигационных запросов возвращаем index.html
             return caches.match("/index.html");
           }
 
-          // Для изображений возвращаем стандартную иконку ошибки
           if (event.request.destination === "image") {
             return caches.match("/icons/missing-image.svg");
           }
 
-          // Для остальных ресурсов возвращаем ошибку
           return new Response("Offline", {
             status: 503,
             statusText: "Service Unavailable",
@@ -139,20 +132,18 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// Обработка сообщений от клиента
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
 
-// Обработка push-уведомлений
 self.addEventListener("push", (event) => {
   const title = "Bartender Game";
   const options = {
     body: event.data ? event.data.text() : "You have a new cocktail to try!",
-    icon: "/favicon/favicon-192x192.png",
-    badge: "/favicon/favicon-96x96.png",
+    icon: "/favicon/web-app-manifest-192x192.png",
+    badge: "/favicon/web-app-manifest-512x512.png",
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
