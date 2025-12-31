@@ -318,6 +318,7 @@ class BartenderGame {
     this.avgTimeElement = document.getElementById("avg-time");
     this.gamesPlayedElement = document.getElementById("games-played");
     this.bestTimeElement = document.getElementById("best-time");
+    this.previousBtn = document.getElementById("btn-previous");
 
     this.addedIngredients = [];
     this.stirCount = 0;
@@ -845,49 +846,6 @@ class BartenderGame {
     }
   }
 
-  // НОВЫЙ МЕТОД: Сброс уровня для повторного прохождения
-  async resetCompletedLevel() {
-    // Записываем попытку в статистику, если игра уже была начата в этой сессии
-    if (this.levelStarted && this.timeElapsed > 0) {
-      this.recordLevelAttempt();
-    }
-
-    // Сбрасываем состояние уровня, но НЕ удаляем его из пройденных
-    this.resetGlass();
-    this.stirCount = 0;
-    this.isStirring = false;
-    this.isGamePaused = false;
-    this.flipStates = {};
-    this.updateAllFlipStates();
-    this.stopTimer();
-    this.timeElapsed = 0;
-    this.levelStarted = false;
-
-    // ВАЖНО: Не сбрасываем this.levelTime, оставляем исходное значение
-    if (!this.levelTime || this.levelTime === 0) {
-      this.levelTime = this.currentCocktail.timeLimit || 60;
-    }
-
-    // Обновляем UI
-    this.updateTimerDisplay();
-    this.updateRecipeList();
-    this.updateLevelProgress();
-    this.updateNextButton();
-
-    // Не меняем кнопку на "Start Level", оставляем возможность сброса
-    this.startBtn.disabled = false;
-    this.startBtn.innerHTML = "🔄 Reset Level";
-
-    console.log(
-      `🔄 Level ${this.currentLevel} reset for replay (stats preserved)`
-    );
-
-    await this.modal.showMessage(
-      "Level Reset",
-      `🔄 Level ${this.currentLevel} has been reset for replay!`
-    );
-  }
-
   setupFlipControls() {
     this.ingredients.forEach((ing) => {
       let tapCount = 0;
@@ -1177,6 +1135,7 @@ class BartenderGame {
     this.recordLevelCompletion(this.timeElapsed);
     this.updateLevelProgress();
     this.updateNextButton();
+    this.updatePreviousButton();
 
     let message = `✅ Level ${this.currentLevel} completed in ${this.formatTime(
       this.timeElapsed
@@ -1192,6 +1151,7 @@ class BartenderGame {
         message += `\n⏱️ Best time: ${this.formatTime(previousBest)}`;
       }
     }
+
     this.showCurrentLevelStats();
     if (this.currentLevel < this.totalLevels) {
       message += `\nClick "Next" for level ${this.currentLevel + 1}`;
@@ -1387,71 +1347,59 @@ class BartenderGame {
       });
     }
 
-    const solutionBtn = document.getElementById("btn-solution");
-    if (solutionBtn) {
-      solutionBtn.addEventListener("click", () => {
-        this.showSolution();
-      });
-    }
-
-    const restartBtn = document.getElementById("btn-restart");
-    if (restartBtn) {
-      restartBtn.addEventListener("click", async () => {
-        const confirmed = await this.modal.showConfirm(
-          "Restart Game",
-          "Are you sure you want to restart the game from level 1? All statistics will be lost."
-        );
-        if (confirmed) {
-          this.restartGame();
-        }
-      });
-    }
-
-    const statsBtn = document.getElementById("btn-stats");
-    if (statsBtn) {
-      statsBtn.addEventListener("click", () => {
-        this.showDetailedStatistics();
+    if (this.previousBtn) {
+      this.previousBtn.addEventListener("click", () => {
+        this.previousLevel();
       });
     }
   }
 
-  async showDetailedStatistics() {
-    let statsMessage = "📊 DETAILED STATISTICS:\n\n";
+  updatePreviousButton() {
+    if (!this.previousBtn) return;
 
-    for (let i = 1; i <= this.totalLevels; i++) {
-      const stats = this.levelStats[i] || {};
-      const levelName = this.cocktails[i - 1]?.name || `Level ${i}`;
-      const completed = stats.completed ? "✅" : "❌";
-      const bestTime = stats.bestTime
-        ? this.formatTime(stats.bestTime)
-        : "--:--";
-      const attempts = stats.attempts || 0;
-      const successRate = stats.successRate || 0;
+    const isPreviousLevelCompleted = this.completedLevels.includes(
+      this.currentLevel - 1
+    );
+    const isFirstLevel = this.currentLevel <= 1;
+    const isCurrentLevelCompleted = this.completedLevels.includes(
+      this.currentLevel
+    );
 
-      statsMessage += `${completed} ${i}. ${levelName}\n`;
-      statsMessage += `   Best time: ${bestTime}\n`;
-      statsMessage += `   Attempts: ${attempts}\n`;
-      statsMessage += `   Success: ${successRate}%\n\n`;
+    // Активируем кнопку Previous только если:
+    // 1. Это не первый уровень
+    // 2. Предыдущий уровень пройден
+    // 3. Текущий уровень пройден
+    if (!isFirstLevel && isPreviousLevelCompleted && isCurrentLevelCompleted) {
+      this.previousBtn.disabled = false;
+    } else {
+      this.previousBtn.disabled = true;
+    }
+  }
+
+  async previousLevel() {
+    if (this.currentLevel <= 1) {
+      await this.modal.showMessage(
+        "Error",
+        "❌ You are already at the first level!"
+      );
+      return;
     }
 
-    const totalAttempts = Object.values(this.levelStats).reduce(
-      (sum, stats) => sum + (stats.attempts || 0),
-      0
-    );
-    const completedLevels = Object.values(this.levelStats).filter(
-      (stats) => stats.completed
-    ).length;
-    const overallSuccess =
-      this.totalLevels > 0
-        ? Math.round((completedLevels / this.totalLevels) * 100)
-        : 0;
+    if (!this.completedLevels.includes(this.currentLevel - 1)) {
+      await this.modal.showMessage(
+        "Error",
+        "❌ Complete previous level first!"
+      );
+      return;
+    }
 
-    statsMessage += `📈 OVERALL:\n`;
-    statsMessage += `   Levels completed: ${completedLevels}/${this.totalLevels}\n`;
-    statsMessage += `   Total attempts: ${totalAttempts}\n`;
-    statsMessage += `   Overall success: ${overallSuccess}%`;
+    if (!this.completedLevels.includes(this.currentLevel)) {
+      await this.modal.showMessage("Error", "❌ Complete current level first!");
+      return;
+    }
 
-    await this.modal.showMessage("Detailed Statistics", statsMessage);
+    this.currentLevel--;
+    this.loadLevel(this.currentLevel);
   }
 
   updateProgress() {
@@ -1550,6 +1498,8 @@ class BartenderGame {
 
     // Обновляем текст с общим количеством уровней
     levelsTextElement.innerHTML = `Completed: <span id="completed-levels">${this.completedLevels.length}</span>/${this.totalLevels}`;
+    this.updateNextButton();
+    this.updatePreviousButton();
   }
 
   updateNextButton() {
@@ -1607,38 +1557,6 @@ class BartenderGame {
     await this.modal.showMessage(
       "Level Started",
       `🎮 Level ${this.currentLevel} started!\nTime limit: ${this.levelTime} seconds`
-    );
-  }
-
-  async restartGame() {
-    this.stopTimer();
-    this.currentLevel = 1;
-    this.completedLevels = [];
-    this.levelStats = {};
-    this.overallBestTime = null;
-    this.saveGameState();
-    this.loadLevel(1);
-    this.updateLevelStatistics();
-    await this.modal.showMessage(
-      "Game Restarted",
-      "🔄 Game restarted from level 1! Statistics cleared."
-    );
-  }
-
-  async showSolution() {
-    if (!this.currentCocktail) return;
-
-    const requiredStirs = this.currentCocktail.requiredStirs || 3;
-    const ingredients = this.currentCocktail.ingredients
-      .map((i) => {
-        const needsFlip = this.alcoholTypes.includes(i.type);
-        return `${i.type}${needsFlip ? " (FLIPPED)" : ""}`;
-      })
-      .join(", ");
-
-    await this.modal.showMessage(
-      "Solution",
-      `📖 Solution:\n\nIngredients: ${ingredients}\nStir: ${requiredStirs} times\nTime limit: ${this.levelTime}s`
     );
   }
 
@@ -1774,11 +1692,175 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     const game = new BartenderGame();
     window.game = game;
-
-    console.log("Game commands:");
-    console.log("- window.game.showDetailedStatistics() - show detailed stats");
   } catch (error) {
-    console.error("Game failed:", error);
     alert("Game initialization failed.");
   }
+});
+
+// ===== PWA FUNCTIONALITY =====
+class PWAManager {
+  constructor() {
+    this.deferredPrompt = null;
+    this.installButton = document.getElementById("pwa-install-button");
+    this.pwaStatus = document.getElementById("pwa-status");
+    this.isStandalone = this.checkStandaloneMode();
+    this.setupEventListeners();
+    this.updateUI();
+  }
+
+  checkStandaloneMode() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone ||
+      document.referrer.includes("android-app://")
+    );
+  }
+
+  setupEventListeners() {
+    // Обработка события beforeinstallprompt (Android и Chrome)
+    window.addEventListener("beforeinstallprompt", (e) => {
+      console.log("[PWA] beforeinstallprompt event fired");
+      // Предотвращаем автоматическую установку
+      e.preventDefault();
+      // Сохраняем событие для последующего использования
+      this.deferredPrompt = e;
+      // Показываем кнопку установки
+      if (this.installButton) {
+        this.installButton.style.display = "block";
+      }
+      if (this.pwaStatus) {
+        this.pwaStatus.textContent = "📱 Tap to Install App";
+      }
+    });
+
+    // Обработка успешной установки приложения
+    window.addEventListener("appinstalled", () => {
+      console.log("[PWA] App was installed");
+      this.deferredPrompt = null;
+      this.updateUI();
+    });
+
+    // Обработка офлайн/онлайн статуса
+    window.addEventListener("online", () => {
+      console.log("[PWA] Online mode");
+      this.updateNetworkStatus(true);
+    });
+
+    window.addEventListener("offline", () => {
+      console.log("[PWA] Offline mode");
+      this.updateNetworkStatus(false);
+    });
+
+    // Обработка нажатия на кнопку установки
+    if (this.installButton) {
+      this.installButton.addEventListener("click", async () => {
+        if (this.deferredPrompt) {
+          // Скрываем кнопку
+          this.installButton.style.display = "none";
+          // Запускаем установку
+          this.deferredPrompt.prompt();
+          // Ждем результат установки
+          const { outcome } = await this.deferredPrompt.userChoice;
+          console.log(`[PWA] User response to install prompt: ${outcome}`);
+          // Сбрасываем отложенное событие
+          this.deferredPrompt = null;
+          // Обновляем интерфейс
+          this.updateUI();
+        }
+      });
+    }
+  }
+
+  updateUI() {
+    if (this.isStandalone) {
+      // Приложение установлено, скрываем кнопки установки
+      if (this.installButton) {
+        this.installButton.style.display = "none";
+      }
+      if (this.pwaStatus) {
+        this.pwaStatus.textContent = "✅ Installed as App";
+        this.pwaStatus.style.background = "rgba(76, 175, 80, 0.2)";
+        this.pwaStatus.style.color = "#4CAF50";
+      }
+    } else {
+      // Приложение не установлено
+      if (this.deferredPrompt && this.installButton) {
+        this.installButton.style.display = "block";
+      }
+      if (this.pwaStatus) {
+        if (navigator.onLine) {
+          this.pwaStatus.textContent = "📱 Install as App";
+        } else {
+          this.pwaStatus.textContent = "📴 Operating in Offline Mode";
+          this.pwaStatus.style.background = "rgba(244, 67, 54, 0.2)";
+          this.pwaStatus.style.color = "#F44336";
+        }
+      }
+    }
+
+    // Обновляем статус сети
+    this.updateNetworkStatus(navigator.onLine);
+  }
+
+  updateNetworkStatus(isOnline) {
+    const body = document.body;
+    if (isOnline) {
+      body.classList.remove("offline");
+    } else {
+      body.classList.add("offline");
+    }
+  }
+
+  registerServiceWorker() {
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .then((registration) => {
+            console.log(
+              "[PWA] ServiceWorker registered with scope:",
+              registration.scope
+            );
+
+            // Проверка на обновления приложения
+            registration.onupdatefound = () => {
+              const installingWorker = registration.installing;
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === "installed") {
+                  if (navigator.serviceWorker.controller) {
+                    console.log(
+                      "[PWA] New content is available; please refresh."
+                    );
+                    // Можно показать уведомление пользователю о доступном обновлении
+                  } else {
+                    console.log("[PWA] Content is cached for offline use.");
+                  }
+                }
+              };
+            };
+          })
+          .catch((error) => {
+            console.error("[PWA] ServiceWorker registration failed:", error);
+          });
+      });
+    }
+  }
+}
+
+// Initialize PWA functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const pwaManager = new PWAManager();
+  pwaManager.registerServiceWorker();
+  console.log("[PWA] PWA functionality initialized");
+
+  // Ручное обновление приложения
+  setInterval(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistration().then((registration) => {
+        if (registration) {
+          registration.update();
+        }
+      });
+    }
+  }, 600000); // Проверяем обновления каждые 10 минут
 });

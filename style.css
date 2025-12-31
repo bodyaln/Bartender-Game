@@ -584,10 +584,6 @@ body {
     color: white; 
 }
 
-.bartender__btn--solution { 
-    background: #FF9800; 
-    color: white; 
-}
 
 .bartender__btn--next { 
     background: var(--info); 
@@ -702,19 +698,6 @@ body {
     font-size: 0.9rem;
 }
 
-.bartender__mixing-stats {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius-md);
-    padding: 15px;
-}
-
-.bartender__mix-tip {
-    background: rgba(255, 152, 0, 0.1);
-    border-radius: var(--radius-sm);
-    padding: 8px;
-    margin-top: 10px;
-    font-size: 0.9rem;
-}
 
 .bartender__pwa-status {
     background: rgba(255, 152, 0, 0.2);
@@ -1021,36 +1004,38 @@ body {
 .mt-2 { margin-top: 20px; }
 .mb-2 { margin-bottom: 20px; }
 
-/* ===== OFFLINE ІНДИКАТОР ===== */
+/* ===== OFFLINE INDICATOR ===== */
 body.offline::before {
-    content: "📴 OFFLINE MODE";
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: var(--error);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    z-index: 1000;
-    animation: pulse 2s infinite;
+  content: "📴 OFFLINE MODE";
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: var(--error);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 1000;
+  animation: pulse 2s infinite;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
-.bartender__modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-    gap: 10px;
+/* ===== PWA INSTALL BUTTON ANIMATION ===== */
+@keyframes install-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
 }
 
-#message-text {
-    white-space: pre-line;
-    line-height: 1.5;
+.bartender__btn--install {
+  animation: install-pulse 2s infinite;
+  background: linear-gradient(45deg, #ff4081, #ff9100);
+  transform: scale(1.02);
 }
-
-

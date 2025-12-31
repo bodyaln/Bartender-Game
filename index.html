@@ -14,17 +14,19 @@
 
     <!-- Meta tags -->
     <meta name="description" content="Drag & Drop cocktail mixing game - PWA for Web Technologies course">
-    <meta name="theme-color" content="#1a1a2e">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="theme-color" content="#1a1a2e">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Bartender Game">
     <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
     <link rel="shortcut icon" href="favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="MyWebSite" />
-    <link rel="manifest" href="favicon/site.webmanifest" />
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
@@ -242,7 +244,8 @@
                     <button id="btn-reset" class="bartender__btn bartender__btn--reset">🗑️ Reset</button>
                     <button id="btn-stir" class="bartender__btn bartender__btn--stir">🔄 Stir: <span
                             id="stir-count">0</span></button>
-                    <button id="btn-solution" class="bartender__btn bartender__btn--solution">📖 Solution</button>
+                    <button id="btn-previous" class="bartender__btn bartender__btn--previous" disabled>←
+                        Previous</button>
                     <button id="btn-next" class="bartender__btn bartender__btn--next" disabled>Next →</button>
                 </div>
             </section>
@@ -254,16 +257,9 @@
                 <div class="bartender__stats-section">
                     <h3>Level Progress</h3>
                     <div class="bartender__levels">
-                        <div class="bartender__level bartender__level--completed">1</div>
-                        <div class="bartender__level bartender__level--current">2</div>
-                        <div class="bartender__level">3</div>
-                        <div class="bartender__level">4</div>
-                        <div class="bartender__level">5</div>
-                        <div class="bartender__level">6</div>
-                        <div class="bartender__level">7</div>
-                        <div class="bartender__level">8</div>
+
                     </div>
-                    <p class="bartender__levels-text">Completed: <span id="completed-levels">1</span>/8</p>
+                    <p class="bartender__levels-text">Completed: <span id="completed-levels"></span></p>
                 </div>
 
                 <div class="bartender__stats-section">
@@ -289,19 +285,8 @@
                     <ul class="bartender__controls-guide">
                         <li><strong>Desktop:</strong> Drag with mouse</li>
                         <li><strong>Mobile:</strong> Touch & drag</li>
-                        <li><strong>Rotate:</strong> Hold SHIFT while dragging</li>
-                        <li><strong>Fast drag:</strong> Quick pour</li>
-                        <li><strong>Slow drag:</strong> Precise pour</li>
+                        <li><strong>Rotate:</strong> Double click on ingredient to rotate</li>
                     </ul>
-                </div>
-
-                <div class="bartender__stats-section">
-                    <h3>Mixing Stats</h3>
-                    <div class="bartender__mixing-stats">
-                        <div>Total stirs: <span id="total-stirs">0</span></div>
-                        <div>Mix quality: <span id="mix-quality">0%</span></div>
-                        <div class="bartender__mix-tip">💡 Tip: Stir 3 times for perfect mix</div>
-                    </div>
                 </div>
 
                 <div class="bartender__stats-section">

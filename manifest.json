@@ -1,0 +1,38 @@
+{
+  "name": "Bartender Game",
+  "short_name": "Bartender",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#00adb5",
+  "icons": [
+    {
+      "src": "favicon//favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "description": "Drag & Drop cocktail mixing game - PWA for Web Technologies course",
+  "categories": ["games", "entertainment", "education"],
+  "screenshots": [
+    {
+      "src": "screenshots/game-screenshot-1.png",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ],
+  "lang": "sk",
+  "dir": "ltr"
+}
