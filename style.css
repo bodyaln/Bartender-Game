@@ -72,6 +72,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
   animation: rainbow 8s ease-in-out infinite;
   display: inline-block;
 }
@@ -393,7 +394,8 @@ body {
   z-index: 1;
   pointer-events: none;
   user-select: none;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
   animation: popIn 0.5s ease;
 }
 

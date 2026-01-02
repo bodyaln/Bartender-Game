@@ -61,7 +61,7 @@ class BartenderGame {
     }
     this.updateLevelProgress();
     this.setupDragAndDrop();
-    this.touchManager.setupTouchEvents();
+    this.touchManager.initializeTouch();
     this.setupButtons();
     this.setupFlipControls();
     this.setupModal();

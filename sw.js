@@ -1,44 +1,45 @@
 const CACHE_NAME = "bartender-game-v1";
+const APP_PREFIX = "/~xlynnykb/Bartender";
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/modalManager.js",
-  "/touchDragManager.js",
-  "/bartenderGame.js",
-  "/pwaManager.js",
-  "/main.js",
-  "/style.css",
-  "/cocktails.json",
-  "/instructions.html",
-  "/favicon/favicon.svg",
-  "/favicon/favicon-96x96.png",
-  "/favicon/web-app-manifest-192x192.png",
-  "/favicon/web-app-manifest-512x512.png",
-  "/manifest.json",
-  "/favicon/favicon.ico",
-  "/favicon/apple-touch-icon.png",
-  "/icons/rum.svg",
-  "/icons/tequila.svg",
-  "/icons/whiskey.svg",
-  "/icons/vodka.svg",
-  "/icons/gin.svg",
-  "/icons/triple-sec.svg",
-  "/icons/vermouth.svg",
-  "/icons/campari.svg",
-  "/icons/lime-juice.svg",
-  "/icons/lemon-juice.svg",
-  "/icons/soda.svg",
-  "/icons/mint.svg",
-  "/icons/lime.svg",
-  "/icons/orange.svg",
-  "/icons/cherry.svg",
-  "/icons/olive.svg",
-  "/icons/cranberry.svg",
-  "/icons/sugar.svg",
-  "/icons/salt.svg",
-  "/icons/bitters.svg",
-  "/icons/egg-white.svg",
-  "/icons/ice.svg",
+  `${APP_PREFIX}/`,
+  `${APP_PREFIX}/index.html`,
+  `${APP_PREFIX}/modalManager.js`,
+  `${APP_PREFIX}/touchDragManager.js`,
+  `${APP_PREFIX}/bartenderGame.js`,
+  `${APP_PREFIX}/pwaManager.js`,
+  `${APP_PREFIX}/main.js`,
+  `${APP_PREFIX}/style.css`,
+  `${APP_PREFIX}/cocktails.json`,
+  `${APP_PREFIX}/instructions.html`,
+  `${APP_PREFIX}/favicon/favicon.svg`,
+  `${APP_PREFIX}/favicon/favicon-96x96.png`,
+  `${APP_PREFIX}/favicon/web-app-manifest-192x192.png`,
+  `${APP_PREFIX}/favicon/web-app-manifest-512x512.png`,
+  `${APP_PREFIX}/manifest.json`,
+  `${APP_PREFIX}/favicon/favicon.ico`,
+  `${APP_PREFIX}/favicon/apple-touch-icon.png`,
+  `${APP_PREFIX}/icons/rum.svg`,
+  `${APP_PREFIX}/icons/tequila.svg`,
+  `${APP_PREFIX}/icons/whiskey.svg`,
+  `${APP_PREFIX}/icons/vodka.svg`,
+  `${APP_PREFIX}/icons/gin.svg`,
+  `${APP_PREFIX}/icons/triple-sec.svg`,
+  `${APP_PREFIX}/icons/vermouth.svg`,
+  `${APP_PREFIX}/icons/campari.svg`,
+  `${APP_PREFIX}/icons/lime-juice.svg`,
+  `${APP_PREFIX}/icons/lemon-juice.svg`,
+  `${APP_PREFIX}/icons/soda.svg`,
+  `${APP_PREFIX}/icons/mint.svg`,
+  `${APP_PREFIX}/icons/lime.svg`,
+  `${APP_PREFIX}/icons/orange.svg`,
+  `${APP_PREFIX}/icons/cherry.svg`,
+  `${APP_PREFIX}/icons/olive.svg`,
+  `${APP_PREFIX}/icons/cranberry.svg`,
+  `${APP_PREFIX}/icons/sugar.svg`,
+  `${APP_PREFIX}/icons/salt.svg`,
+  `${APP_PREFIX}/icons/bitters.svg`,
+  `${APP_PREFIX}/icons/egg-white.svg`,
+  `${APP_PREFIX}/icons/ice.svg`,
 ];
 
 self.addEventListener("install", (event) => {
@@ -46,10 +47,7 @@ self.addEventListener("install", (event) => {
     caches
       .open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(urlsToCache).catch((error) => {
-          console.error("[ServiceWorker] Caching failed:", error);
-          throw error;
-        });
+        return cache.addAll(urlsToCache).catch(() => {});
       })
       .then(() => {
         return self.skipWaiting();
@@ -116,11 +114,11 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() => {
           if (event.request.mode === "navigate") {
-            return caches.match("/index.html");
+            return caches.match(`${APP_PREFIX}/index.html`);
           }
 
           if (event.request.destination === "image") {
-            return caches.match("/icons/missing-image.svg");
+            return caches.match(`${APP_PREFIX}/icons/missing-image.svg`);
           }
 
           return new Response("Offline", {
@@ -142,8 +140,8 @@ self.addEventListener("push", (event) => {
   const title = "Bartender Game";
   const options = {
     body: event.data ? event.data.text() : "You have a new cocktail to try!",
-    icon: "/favicon/web-app-manifest-192x192.png",
-    badge: "/favicon/web-app-manifest-512x512.png",
+    icon: `${APP_PREFIX}/favicon/web-app-manifest-192x192.png`,
+    badge: `${APP_PREFIX}/favicon/web-app-manifest-512x512.png`,
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
